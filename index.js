@@ -3,7 +3,7 @@ var http 		= require('http'),
 	MethodTable = (JSON.parse(require('fs').readFileSync(__dirname + '/methods.json'))).results;
 
 // Create Servant Class-based Object
-function Servant(client_id, client_secret, api_version) {
+function Servant(client_id, client_secret, redirect_uri, api_version) {
 	// Check Formats of Parameters submitted
 	if(typeof api_key == 'string') {
 		this._api_key = client_id;
@@ -11,6 +11,9 @@ function Servant(client_id, client_secret, api_version) {
 	else {
 		this._api_key = null;
 	}
+
+	// TO DO - VALIDATIONS
+	this._redirect_uri = redirect_uri;
 
 	// Set the configuration settings for Oauth2 Client
 	var credentials = {
@@ -47,23 +50,20 @@ function Servant(client_id, client_secret, api_version) {
 
 Servant.prototype.methodsLoaded = false;
 
-Servant.prototype.getRequestToken = function(callback_url) {
-	if(typeof callback_url != 'string') {
-		throw new TypeError('Servant SDK Error – Please Include A Callback URL');
-	}
-
+Servant.prototype.getRequestToken = function() {
 	// Authorization OAuth2 URI
 	this._client.AuthCode.authorizeURL({
-	  redirect_uri: callback_url
+	  redirect_uri: this._redirect_uri
 	});
 };
 
-Servant.prototype.getAccessToken = function(request_token, callback) {
+Servant.prototype.getAccessToken = function(callback) {
 	// Get the access token object (the authorization code is given from the previous step).
+	var code = req.query.code
 	var token;
 	OAuth2.AuthCode.getToken({
-	  code:           request_token,
-	  redirect_uri:   'http://localhost:3000/callback'
+	  code:           code,
+	  redirect_uri:   this._redirect_uri
 	}, saveToken);
 
 	// Save the access token
