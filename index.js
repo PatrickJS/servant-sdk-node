@@ -60,7 +60,7 @@ Servant.prototype.getRequestToken = function(callback_url) {
 
 	// Authorization OAuth2 URI
 	this._client.AuthCode.authorizeURL({
-	  redirect_uri: (callback_url
+	  redirect_uri: callback_url
 	});
 };
 
