@@ -1,5 +1,4 @@
 var http 		= require('http'),
-	oauth 		= require('oauth-client'),
 	querystring = require('querystring'),
 	MethodTable = (JSON.parse(require('fs').readFileSync(__dirname + '/methods.json'))).results;
 
@@ -8,11 +7,6 @@ function Servant(client_id, client_secret, api_version) {
 	// Check Formats of Parameters submitted
 	if(typeof api_key == 'string') {
 		this._api_key = client_id;
-
-		if (typeof client_secret == 'string') {
-			this._consumer = oauth.createConsumer(api_key, shared_secret);
-			this._signature = oauth.createHmac(this._consumer);
-		}
 	}
 	else {
 		this._api_key = null;
@@ -74,10 +68,10 @@ Servant.prototype.getAccessToken = function(request_token, callback) {
 
 	// Save the access token
 	function saveToken(error, result) {
-	  if (error) { console.log('Access Token Error', error.message); }
+	  if (error) { console.log('Access Token Error', error.message) }
 	  token = OAuth2.AccessToken.create(result);
 	  console.log("TOKEN CREATED: ", token)
-	});
+	};
 };
 
 // Creates An API Method for each Method listed in Methods.json
