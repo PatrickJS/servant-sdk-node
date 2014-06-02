@@ -1,0 +1,18 @@
+// Methods for Retrieving Tokens are in Index.js
+{
+   "params"  : null,
+   "count"   : 115,
+   "type"    : "ApiMethod",
+   "results" : [
+      {
+         "visibility"      : "public",
+         "defaults"        : null,
+         "name"            : "getMethodTable",
+         "description"     : "Get a list of all methods available.",
+         "uri"             : "/",
+         "params"          : null,
+         "type"            : "ApiMethod",
+         "http_method"     : "GET"
+      }
+   ]
+}
