@@ -12,25 +12,38 @@ function Servant(client_id, client_secret, redirect_uri, api_version) {
 		this._api_key = null;
 	}
 
-	// TO DO - VALIDATIONS
+	// TO DO - VALIDATIONS For this and API_VERSION
 	this._redirect_uri = redirect_uri;
 
-	// Set the configuration settings for Oauth2 Client
-	var credentials = {
+	// Initialize the OAuth2 Library
+	var OAuth2 = require('simple-oauth2')({
 	    clientID:           client_id,
 	    clientSecret:       client_secret,
 	    authorizationPath:  '/oauth/authorize',
-	    tokenPath:          '/oauth/token'
+	    tokenPath:          '/oauth/token',
+	    site:               'http://www.servant.co'
+	});
+	// Servant Authentication Methods
+	this.authorization_uri = OAuth2.AuthCode.authorizeURL({
+		  redirect_uri: this._redirect_uri
+	});
+
+	this.getAccessToken = function(callback) {
+		// Get the access token object (the authorization code is given from the previous step).
+		var code = req.query.code
+		var token;
+		OAuth2.AuthCode.getToken({
+		  code:           code,
+		  redirect_uri:   this._redirect_uri
+		}, saveToken);
+
+		// Save the access token
+		function saveToken(error, result) {
+		  if (error) { console.log('Access Token Error', error.message) }
+		  token = OAuth2.AccessToken.create(result);
+		  console.log("TOKEN CREATED: ", token)
+		};
 	};
-
-	if (typeof api_version == 'string') {
-		credentials.site = 'http://www.servant.co/' + api_version
-	} else {
-		credentials.site = 'http://www.servant.co/v0'
-	}
-
-	// Initialize the OAuth2 Library
-	this._client = require('simple-oauth2')(credentials);
 
 	if(!Servant.prototype.methodsLoaded) {
 		for(var i = 0; i < MethodTable.length; ++i) {
@@ -50,29 +63,29 @@ function Servant(client_id, client_secret, redirect_uri, api_version) {
 
 Servant.prototype.methodsLoaded = false;
 
-Servant.prototype.getRequestToken = function() {
-	// Authorization OAuth2 URI
-	this._client.AuthCode.authorizeURL({
-	  redirect_uri: this._redirect_uri
-	});
-};
+// Servant.prototype.getRequestToken = function() {
+// 	// Authorization OAuth2 URI
+// 	this._client.AuthCode.authorizeURL({
+// 	  redirect_uri: this._redirect_uri
+// 	});
+// };
 
-Servant.prototype.getAccessToken = function(callback) {
-	// Get the access token object (the authorization code is given from the previous step).
-	var code = req.query.code
-	var token;
-	OAuth2.AuthCode.getToken({
-	  code:           code,
-	  redirect_uri:   this._redirect_uri
-	}, saveToken);
+// Servant.prototype.getAccessToken = function(callback) {
+// 	// Get the access token object (the authorization code is given from the previous step).
+// 	var code = req.query.code
+// 	var token;
+// 	OAuth2.AuthCode.getToken({
+// 	  code:           code,
+// 	  redirect_uri:   this._redirect_uri
+// 	}, saveToken);
 
-	// Save the access token
-	function saveToken(error, result) {
-	  if (error) { console.log('Access Token Error', error.message) }
-	  token = OAuth2.AccessToken.create(result);
-	  console.log("TOKEN CREATED: ", token)
-	};
-};
+// 	// Save the access token
+// 	function saveToken(error, result) {
+// 	  if (error) { console.log('Access Token Error', error.message) }
+// 	  token = OAuth2.AccessToken.create(result);
+// 	  console.log("TOKEN CREATED: ", token)
+// 	};
+// };
 
 // Creates An API Method for each Method listed in Methods.json
 Servant.prototype._createMethod = function(http_method, uri, visibility, param_types) {
