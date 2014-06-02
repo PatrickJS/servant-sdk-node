@@ -7,8 +7,7 @@ function Servant(client_id, client_secret, redirect_uri, api_version) {
 	// Check Formats of Parameters submitted
 	if(typeof api_key == 'string') {
 		this._api_key = client_id;
-	}
-	else {
+	} else {
 		this._api_key = null;
 	}
 
@@ -25,16 +24,19 @@ function Servant(client_id, client_secret, redirect_uri, api_version) {
 	});
 	// Servant Authentication Methods
 	this.authorization_uri = OAuth2.AuthCode.authorizeURL({
-		  redirect_uri: this._redirect_uri
+		  redirect_uri: redirect_uri
 	});
 
-	this.getAccessToken = function(callback) {
+	console.log(this.authorization_uri)
+
+	this.getAccessToken = function(req, callback) {
+		console.log("here!!!!");
 		// Get the access token object (the authorization code is given from the previous step).
 		var code = req.query.code
 		var token;
 		OAuth2.AuthCode.getToken({
 		  code:           code,
-		  redirect_uri:   this._redirect_uri
+		  redirect_uri:   redirect_uri
 		}, saveToken);
 
 		// Save the access token
@@ -62,30 +64,6 @@ function Servant(client_id, client_secret, redirect_uri, api_version) {
 }
 
 Servant.prototype.methodsLoaded = false;
-
-// Servant.prototype.getRequestToken = function() {
-// 	// Authorization OAuth2 URI
-// 	this._client.AuthCode.authorizeURL({
-// 	  redirect_uri: this._redirect_uri
-// 	});
-// };
-
-// Servant.prototype.getAccessToken = function(callback) {
-// 	// Get the access token object (the authorization code is given from the previous step).
-// 	var code = req.query.code
-// 	var token;
-// 	OAuth2.AuthCode.getToken({
-// 	  code:           code,
-// 	  redirect_uri:   this._redirect_uri
-// 	}, saveToken);
-
-// 	// Save the access token
-// 	function saveToken(error, result) {
-// 	  if (error) { console.log('Access Token Error', error.message) }
-// 	  token = OAuth2.AccessToken.create(result);
-// 	  console.log("TOKEN CREATED: ", token)
-// 	};
-// };
 
 // Creates An API Method for each Method listed in Methods.json
 Servant.prototype._createMethod = function(http_method, uri, visibility, param_types) {
