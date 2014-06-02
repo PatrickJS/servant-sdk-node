@@ -1,0 +1,28 @@
+{
+  "name": "servant-sdk",
+  "version": "0.1.0",
+  "description": "Servant SDK for Node.js.  A simple javascript libaray for interacting with the Servant API",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ac360/servant-node-sdk.git"
+  },
+  "keywords": [
+    "servant",
+    "api",
+    "content",
+    "cloud",
+    "storage",
+    "archetypes",
+    "content",
+    "archetypes",
+    "servants"
+  ],
+  "author": "Austen Collins <austen@servant.co> (http://servant.co/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ac360/servant-node-sdk/issues"
+  },
+  "homepage": "https://github.com/ac360/servant-node-sdk"
+}
