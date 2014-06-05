@@ -11,15 +11,12 @@ function Servant(client_id, client_secret, redirect_uri, api_version) {
 		this._api_key = null;
 	}
 
-	// TO DO - VALIDATIONS For this and API_VERSION
-	this._redirect_uri = redirect_uri;
-
 	// Initialize the OAuth2 Library
 	var OAuth2 = require('simple-oauth2')({
 	    clientID:           client_id,
 	    clientSecret:       client_secret,
-	    authorizationPath:  '/oauth/authorize',
-	    tokenPath:          '/oauth/token',
+	    authorizationPath:  '/oauth2/authorize',
+	    tokenPath:          '/oauth2/token',
 	    site:               'http://www.servant.co'
 	});
 	// Servant Authentication Methods
@@ -27,10 +24,7 @@ function Servant(client_id, client_secret, redirect_uri, api_version) {
 		  redirect_uri: redirect_uri
 	});
 
-	console.log(this.authorization_uri)
-
 	this.getAccessToken = function(req, callback) {
-		console.log("here!!!!");
 		// Get the access token object (the authorization code is given from the previous step).
 		var code = req.query.code
 		var token;
@@ -41,9 +35,12 @@ function Servant(client_id, client_secret, redirect_uri, api_version) {
 
 		// Save the access token
 		function saveToken(error, result) {
-		  if (error) { console.log('Access Token Error', error.message) }
-		  token = OAuth2.AccessToken.create(result);
-		  console.log("TOKEN CREATED: ", token)
+		    if (error) { 
+		  		console.log('Access Token Error', error.message);
+		  		if (callback) { callback(error, null) };
+		    };
+		    token = OAuth2.AccessToken.create(result);
+		    if (callback) { callback(null, token) };
 		};
 	};
 
