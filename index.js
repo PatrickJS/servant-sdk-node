@@ -25,22 +25,28 @@ function Servant(client_id, client_secret, redirect_uri, api_version) {
 	});
 
 	this.getAccessToken = function(req, callback) {
-		// Get the access token object (the authorization code is given from the previous step).
-		var code = req.query.code
-		var token;
-		OAuth2.AuthCode.getToken({
-		  code:           code,
-		  redirect_uri:   redirect_uri
-		}, saveToken);
-
+		console.log(req.query)
+		// Check to see if 'authenticated' param is available
+		if (req.query.authenticated && req.query.authenticated == 'true') {
+			return callback(null, req.query);
+		} else {
+			// Convert the Request Code/Token into an Access Token
+			var code = req.query.code
+			var token;
+			OAuth2.AuthCode.getToken({
+			  code:           code,
+			  redirect_uri:   redirect_uri
+			}, saveToken);
+		};
 		// Save the access token
 		function saveToken(error, result) {
 		    if (error) { 
 		  		console.log('Access Token Error', error.message);
 		  		if (callback) { callback(error, null) };
 		    };
-		    token = OAuth2.AccessToken.create(result);
-		    if (callback) { callback(null, token) };
+		    // Create Refresh And Other Function Options
+		    // token = OAuth2.AccessToken.create(result);
+		    if (callback) { callback(null, result) };
 		};
 	};
 
