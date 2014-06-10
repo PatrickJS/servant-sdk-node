@@ -25,7 +25,6 @@ function Servant(client_id, client_secret, redirect_uri, api_version) {
 	});
 
 	this.getAccessToken = function(req, callback) {
-		console.log(req.query)
 		// Check to see if 'authenticated' param is available
 		if (req.query.authenticated && req.query.authenticated == 'true') {
 			return callback(null, req.query);
