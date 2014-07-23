@@ -44,7 +44,7 @@ function Servant(client_id, client_secret, redirect_uri, api_version) {
 		// Save the access token
 		function saveToken(error, result) {
 			if (error) {
-				console.log('Access Token Error', error.message);
+				console.log('Access Token Error', error);
 				if (callback) callback(error, null);
 			};
 			// Create Refresh And Other Function Options
