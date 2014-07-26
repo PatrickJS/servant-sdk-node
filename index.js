@@ -112,7 +112,7 @@ Servant.prototype._createMethod = function(http_method, uri, visibility, param_t
 				vis = 'private';
 			}
 		} else if (vis == 'private') {
-			if (!params.token) return callback(new Error("Servant SDK Error – No token provided in the parameters"));
+			if (!params || !params.token) return callback(new Error("Servant SDK Error – No token provided in the parameters"));
 		}
 
 		this._callAPI(
@@ -174,45 +174,10 @@ Servant.prototype._callAPI = function(http_method, uri, visibility, param_types,
 		param_name;
 	for (param_name in params) {
 		if (params.hasOwnProperty(param_name)) {
-			if (param_name == 'fields') {
-				if (!this._checkType(params[param_name], 'array(string)', visibility)) {
-					return callback(new TypeError('fields is not an array of strings'));
-				}
-			} else if (param_name == 'includes') {
-				if (!this._checkType(params[param_name], 'array(string)', visibility)) {
-					return callback(new TypeError('includes is not an array of strings'));
-				}
 
-				var includes = params[param_name];
-
-				// regex for matching associations: the second half is just the
-				// first one wrapped in parens with an extra slash in front
-				// and an asterisk after, for nested associations
-				var assoc_regex = /^[A-Za-z]+(\(([a-z0-9_]+,)*[a-z0-9_]+\))?(:[A-Za-z]+)?(:[0-9]+(:[0-9]+)?)?(\/[A-Za-z]+(\(([a-z0-9_]+,)*[a-z0-9_]+\))?(:[A-Za-z]+)?(:[0-9]+(:[0-9]+)?)?)*$/;
-
-				if (includes instanceof Array) {
-					for (var i = 0; i < includes.length; ++i) {
-						if (!assoc_regex.test(includes[i])) {
-							return callback(new TypeError('association ' + i + ' is malformatted'));
-						}
-					}
-				} else {
-					if (!assoc_regex.test(includes)) {
-						return callback(new TypeError('association 0 is malformatted'));
-					}
-				}
-			} else {
-				if (!(param_name in param_types)) {
-					return callback(new TypeError('"' + param_name +
-						'" is not a valid parameter for this request'));
-				}
-
-				if (!this._checkType(params[param_name], param_types[param_name], visibility)) {
-					callback(new TypeError('"' + params[param_name] +
-						'" does not match the parameter description "' +
-						param_types[param_name] + '"'));
-					return;
-				}
+			if (!(param_name in param_types)) {
+				return callback(new TypeError('Servant SDK Error – "' + param_name +
+					'" is not a valid parameter for this request'));
 			}
 
 			if (params[param_name] instanceof Array) {
@@ -326,117 +291,6 @@ Servant.prototype._callAPI = function(http_method, uri, visibility, param_types,
 		callback(err);
 
 	});
-};
-
-// Check if API Call Is Only Reading or Reading & Writing
-Servant.prototype._checkType = function(value, param_type, visibility) {
-	if (typeof visibility == 'undefined') {
-		visibility = 'public';
-	}
-
-	if (param_type.indexOf('array(') === 0 && param_type[param_type.length - 1] == ')') {
-		param_type = param_type.substring('array('.length, param_type.length - 1);
-
-		if (value instanceof Array) {
-			for (var i = 0; i < value.length; i++) {
-				if (!this._checkType(value[i], param_type)) {
-					return false;
-				}
-			}
-
-			return true;
-		} else {
-			return this._checkType(value, param_type);
-		}
-	}
-
-	if (param_type.indexOf('enum(') === 0 && param_type[param_type.length - 1] == ')') {
-		var enums = param_type.substring('enum('.length, param_type.length - 1).split(',');
-
-		for (var i = 0; i < enums.length; i++) {
-			enums[i] = enums[i].trim();
-		}
-
-		if (enums.indexOf(value.toString()) == -1) {
-			return false;
-		}
-
-		return true;
-	}
-
-	switch (param_type) {
-		case 'int':
-			if (isNaN(value) || (parseFloat(value) != parseInt(value, 10))) {
-				return false;
-			}
-			break;
-
-		case 'float':
-			if (!isFinite(value)) {
-				return false;
-			}
-			break;
-
-		case 'string':
-			if (!value.toString ||
-				value.toString == Object.prototype.toString ||
-				value.toString == Function.prototype.toString ||
-				value.toString == RegExp.prototype.toString) {
-				return false;
-			}
-
-			if (value.toString().length > 255) {
-				return false;
-			}
-			break;
-
-		case 'user_id_or_name':
-			if (value == '__SELF__') {
-				return true;
-			}
-
-			// fallthrough
-
-		case 'shop_id_or_name':
-			if (!this._checkType(value, 'int')) {
-				if (this._checkType(value, 'string') && !/^[A-Za-z][A-Za-z0-9]{2,19}$/.test(value.toString())) {
-					return false;
-				}
-			}
-			break;
-
-		case 'color_triplet':
-			var hsv = [];
-
-			if (value instanceof Array) {
-				hsv = value;
-			} else {
-				hsv = value.split(',');
-			}
-
-			if (hsv.length == 3) {
-				if (
-					(hsv[0] >= 0 && hsv[0] <= 360) ||
-					(hsv[1] >= 0 && hsv[1] <= 100) ||
-					(hsv[2] >= 0 && hsv[2] <= 100)) {
-					return true;
-				}
-			}
-
-			if (/^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(value)) {
-				return true;
-			}
-
-			return false;
-
-		case 'color_wiggle':
-			return (value >= 0 && value <= 30);
-
-		default:
-			return false;
-	}
-
-	return true;
 };
 
 exports.Servant = Servant;
