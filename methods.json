@@ -8,7 +8,9 @@
       "name": "getUser",
       "description": "Get the Servant account owner's user data",
       "uri": "/api/v1/:token/user",
-      "params": null,
+      "params": {
+         "token": "string"
+      },
       "type": "User",
       "http_method": "GET"
    }, {
@@ -18,6 +20,7 @@
       "description": "Get the most recent products",
       "uri": "/api/v1/:token/servants/:servantID/products",
       "params": {
+         "token": "string",
          "servantID": "string"
       },
       "type": "Products",

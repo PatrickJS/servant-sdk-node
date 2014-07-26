@@ -101,25 +101,18 @@ Servant.prototype._createMethod = function(http_method, uri, visibility, param_t
 		throw new Error('method visibility is neither public nor private');
 	}
 
-	return function(params, token, callback) {
-		if (typeof token == 'function') {
-			if (typeof params == 'undefined' || typeof token == 'undefined' || typeof callback == 'undefined') {
-				throw new Error('Servant SDK Error – Please include params, a token and a callback in your Servant requests.  If you are not using params, then put "null"');
-			}
-		}
+	return function(params, callback) {
 
 		// copy the visibility so it can be safely modified
 		var vis = visibility;
 
 		if (vis == 'public') {
-			if (token) {
+			if (params.token) {
 				// if a token is passed in, make the call private
 				vis = 'private';
 			}
 		} else if (vis == 'private') {
-			if (!token) {
-				return callback(new Error("no token provided for private method"));
-			}
+			if (!params.token) return callback(new Error("Servant SDK Error – No token provided in the parameters"));
 		}
 
 		this._callAPI(
@@ -128,7 +121,7 @@ Servant.prototype._createMethod = function(http_method, uri, visibility, param_t
 			vis, // visibility
 			param_types, // parameter types
 			params, // parameters
-			token, // OAuth access token and secret
+			params.token, // OAuth access token and secret
 			callback); // callback for call completion
 	};
 };
