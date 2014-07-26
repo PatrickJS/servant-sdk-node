@@ -3,7 +3,18 @@
    "count": 115,
    "type": "ApiMethod",
    "results": [{
-      "visibility": "public",
+      "visibility": "private",
+      "defaults": null,
+      "name": "getUser",
+      "description": "Get the Servant account owner's user data",
+      "uri": "/api/v1/:token/user",
+      "params": {
+         "token": "string"
+      },
+      "type": "User",
+      "http_method": "GET"
+   }, {
+      "visibility": "private",
       "defaults": null,
       "name": "getProducts",
       "description": "Get the most recent products",

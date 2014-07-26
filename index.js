@@ -9,11 +9,11 @@ var http = require('http'),
 // Create Servant Class-based Object
 function Servant(client_id, client_secret, redirect_uri, api_version) {
 
-	if (!client_id, !client_secret, !redirect_uri, !api_version) throw new Error("Please include all of the required parameters: client_id, client_secret, redirect_uri, api_version");
+	if (!client_id, !client_secret, !redirect_uri, !api_version) throw new Error("Servant SDK Error – Please include all of the required parameters: client_id, client_secret, redirect_uri, api_version");
 
 	// Set Defaults
 	this._api_key = client_id;
-	var base_url = '/connect/' + api_version + '/oauth2/'
+	var base_url = '/connect/' + api_version + '/oauth2/';
 
 	// Create Oauth2 
 	var OAuth2 = require('simple-oauth2')({
@@ -21,7 +21,7 @@ function Servant(client_id, client_secret, redirect_uri, api_version) {
 		clientSecret: client_secret,
 		authorizationPath: base_url + 'authorize',
 		tokenPath: base_url + 'token',
-		site: 'http://www.servant.co'   // CHANGE THIS DEPENDING ON SERVANT DEVELOPMENT
+		site: 'http://www.servant.co'
 	});
 	// Servant Authentication Methods
 	this.authorization_uri = OAuth2.AuthCode.authorizeURL({
@@ -29,7 +29,7 @@ function Servant(client_id, client_secret, redirect_uri, api_version) {
 	});
 
 	this.getAccessToken = function(req, callback) {
-		// Check to see if 'authenticated' param is available
+		// Check to see if 'authenticated' param is available, this means the user has already authenticated
 		if (req.query.authenticated && req.query.authenticated == 'true') {
 			return callback(null, req.query);
 		} else {
@@ -44,7 +44,7 @@ function Servant(client_id, client_secret, redirect_uri, api_version) {
 		// Save the access token
 		function saveToken(error, result) {
 			if (error) {
-				console.log('Access Token Error', error);
+				console.log('Servant SDK Error – Access Token Error: ', error);
 				if (callback) callback(error, null);
 			};
 			// Create Refresh And Other Function Options
@@ -243,7 +243,7 @@ Servant.prototype._callAPI = function(http_method, uri, visibility, param_types,
 
 	var headers = {
 		'Connection': 'Keep-Alive',
-		'Host': 'openapi.etsy.com'
+		'Host': 'www.servant.co'
 	};
 
 	var request_url = '';
