@@ -1,5 +1,4 @@
 var http = require('http'),
-	oauth = require('oauth-client'),
 	querystring = require('querystring'),
 	MethodTable = (JSON.parse(require('fs').readFileSync(__dirname + '/methods.json'))).results;
 
@@ -104,15 +103,8 @@ Servant.prototype._createMethod = function(http_method, uri, visibility, param_t
 
 	return function(params, token, callback) {
 		if (typeof token == 'function') {
-			if (typeof callback == 'undefined') {
-				callback = token;
-
-				if (params instanceof oauth.Token) {
-					token = params;
-					params = null;
-				} else if (typeof params == 'object') {
-					token = null;
-				}
+			if (typeof params == 'undefined' || typeof token == 'undefined' || typeof callback == 'undefined') {
+				throw new Error('Servant SDK Error – Please include params, a token and a callback in your Servant requests.  If you are not using params, then put "null"');
 			}
 		}
 
