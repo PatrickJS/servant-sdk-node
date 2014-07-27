@@ -57,7 +57,7 @@ Servant.prototype.getAccessToken = function(req, callback) {
 			console.log(error);
 			return callback(new Error("Servant SDK Error – Access Token Error"));
 		}
-		if (callback) callback(null, result);
+		return callback(null, result);
 	});
 
 };
