@@ -3,122 +3,76 @@ var http = require('http'),
 	MethodTable = (JSON.parse(require('fs').readFileSync(__dirname + '/methods.json'))).results;
 
 
-// INSPIRATION ---- https://github.com/Muon/node-etsy
+// Servant Constructor
+var Servant = function(client_key, client_secret, redirect_uri, api_version) {
 
+	// Check for required parameters
+	if (!client_key || !client_secret || !redirect_uri || !api_version) {
+		throw new Error("Servant SDK Error – Please include all of the required parameters: client_key, client_secret, redirect_uri, api_version");
+	}
 
-// Create Servant Class-based Object
-function Servant(client_id, client_secret, redirect_uri, api_version) {
+	// Defaults
+	this._redirect_uri = redirect_uri;
+	this._version = '0.1.1';
 
-	if (!client_id, !client_secret, !redirect_uri, !api_version) throw new Error("Servant SDK Error – Please include all of the required parameters: client_id, client_secret, redirect_uri, api_version");
-
-	// Set Defaults
-	this._api_key = client_id;
-	var base_url = '/connect/' + api_version + '/oauth2/';
-
-	// Create Oauth2 
-	var OAuth2 = require('simple-oauth2')({
-		clientID: client_id,
-		clientSecret: client_secret,
-		authorizationPath: base_url + 'authorize',
-		tokenPath: base_url + 'token',
-		site: 'http://www.servant.co'
-	});
-	// Servant Authentication Methods
-	this.authorization_uri = OAuth2.AuthCode.authorizeURL({
-		redirect_uri: redirect_uri
-	});
-
-	this.getAccessToken = function(req, callback) {
-		// Check to see if 'authenticated' param is available, this means the user has already authenticated
-		if (req.query.authenticated && req.query.authenticated == 'true') {
-			return callback(null, req.query);
-		} else {
-			// Convert the Request Code/Token into an Access Token
-			var code = req.query.code
-			var token;
-			OAuth2.AuthCode.getToken({
-				code: code,
-				redirect_uri: redirect_uri
-			}, saveToken);
-		};
-		// Save the access token
-		function saveToken(error, result) {
-			if (error) {
-				console.log('Servant SDK Error – Access Token Error: ', error);
-				if (callback) callback(error, null);
-			};
-			// Create Refresh And Other Function Options
-			// token = OAuth2.AccessToken.create(result);
-			if (callback) callback(null, result);
-		};
-	};
-
-	if (!Servant.prototype.methodsLoaded) {
+	// Load all API methods in methods.json for accessing Servant's API Resources
+	if (!this._methodsLoaded) {
 		for (var i = 0; i < MethodTable.length; ++i) {
 			var method = MethodTable[i];
 
 			Servant.prototype[method.name] = Servant.prototype._createMethod(
 				method.http_method,
 				method.uri,
-				method.visibility,
 				method.params
 			);
 		}
-
-		Servant.prototype.methodsLoaded = true;
+		this._methodsLoaded = true;
 	}
-}
+	this._methodsLoaded = false;
 
-Servant.prototype.methodsLoaded = false;
-
-// Creates An API Method for each Method listed in Methods.json
-Servant.prototype._createMethod = function(http_method, uri, visibility, param_types) {
-	if (typeof http_method == 'undefined') {
-		throw new Error('missing required argument http_method');
-	}
-
-	if (typeof uri == 'undefined') {
-		throw new Error('missing required argument uri');
+	// Instantiate Oauth2 Client for User Authentication
+	if (!this._oauth2Client) {
+		this._oauth2Client = require('simple-oauth2')({
+			clientID: client_key,
+			clientSecret: client_secret,
+			authorizationPath: '/connect/' + api_version + '/oauth2/authorize',
+			tokenPath: '/connect/' + api_version + '/oauth2/token',
+			site: 'http://www.servant.co'
+		});
 	}
 
-	if (typeof visibility == 'undefined') {
-		throw new Error('missing required argument visibility');
-	}
+};
 
-	if (typeof param_types == 'undefined') {
-		throw new Error('missing required argument param_types');
-	}
 
-	if (http_method != 'GET' && http_method != 'POST' && http_method != 'PUT' && http_method != 'DELETE') {
-		throw new Error('invalid HTTP method "' + http_method + '"');
-	}
+Servant.prototype.getAccessToken = function(req, callback) {
 
-	if (typeof uri != 'string') {
-		throw new Error('URI is not a string');
-	}
+	// If 'authenticated' param is available, the user has already authorized access to this client
+	if (req.query.authenticated && req.query.authenticated == 'true') return callback(null, req.query);
+	// Convert the Request Token/Authorization Code into an Access Token
+	this._oauth2Client.AuthCode.getToken({
+		code: req.query.code,
+		redirect_uri: this._redirect_uri
+	}, function(error, result) {
+		if (error) {
+			console.log(error);
+			return callback(new Error("Servant SDK Error – Access Token Error"));
+		}
+		if (callback) callback(null, result);
+	});
 
-	if (visibility != 'public' && visibility != 'private') {
-		throw new Error('method visibility is neither public nor private');
-	}
+};
+
+
+// Create An API Method for each Method listed in Methods.json
+Servant.prototype._createMethod = function(http_method, uri, param_types) {
 
 	return function(params, callback) {
 
-		// copy the visibility so it can be safely modified
-		var vis = visibility;
-
-		if (vis == 'public') {
-			if (params.token) {
-				// if a token is passed in, make the call private
-				vis = 'private';
-			}
-		} else if (vis == 'private') {
-			if (!params || !params.token) return callback(new Error("Servant SDK Error – No token provided in the parameters"));
-		}
+		if (!params || !params.token) return callback(new Error("Servant SDK Error – No token provided in the parameters"));
 
 		this._callAPI(
 			http_method, // HTTP method
 			uri, // URI
-			vis, // visibility
 			param_types, // parameter types
 			params, // parameters
 			params.token, // OAuth access token and secret
@@ -126,9 +80,10 @@ Servant.prototype._createMethod = function(http_method, uri, visibility, param_t
 	};
 };
 
+
 // Parses URI and separates Params and other useful things
-Servant.prototype._formatURI = function(uri, visibility, params) {
-	var uri_builder = [this._call_base, '/', visibility];
+Servant.prototype._formatURI = function(uri, params) {
+	var uri_builder = [this._call_base];
 	var idx = 0,
 		cidx = 0;
 
@@ -168,10 +123,14 @@ Servant.prototype._formatURI = function(uri, visibility, params) {
 	return uri_builder.join('');
 };
 
-// Calls the API's resources
-Servant.prototype._callAPI = function(http_method, uri, visibility, param_types, params, token, callback) {
+
+
+// Makes API calls to Servant's resrouces
+Servant.prototype._callAPI = function(http_method, uri, param_types, params, token, callback) {
+
 	var new_params = {},
 		param_name;
+
 	for (param_name in params) {
 		if (params.hasOwnProperty(param_name)) {
 
@@ -188,19 +147,17 @@ Servant.prototype._callAPI = function(http_method, uri, visibility, param_types,
 		}
 	}
 
-	if (token === null) {
-		new_params.api_key = this._api_key;
-	}
-
 	var headers = {
 		'Connection': 'Keep-Alive',
-		'Host': 'www.servant.co'
+		'Host': 'www.servant.co',
+		'Content-Type': 'application/json',
+		'User-Agent': 'Servant Node SDK ' + this._version
 	};
 
 	var request_url = '';
 
 	try {
-		request_url = this._formatURI(uri, visibility, new_params);
+		request_url = this._formatURI(uri, new_params);
 	} catch (e) {
 		return callback(e);
 	}
@@ -212,72 +169,58 @@ Servant.prototype._callAPI = function(http_method, uri, visibility, param_types,
 
 	var request;
 
-	if (token === null) {
-		request = http.Client.prototype.request.call(
-			this._client,
-			http_method,
-			request_url,
-			headers
-		);
+	var options = {
+		host: 'www.servant.co',
+		port: 80,
+		path: request_url,
+		method: http_method,
+		headers: headers
+	};
 
-		request.end(http_method == 'GET' ? null : querystring.stringify(new_params));
-	} else {
-		this._signature.token = token;
+	var req = http.request(options, function(response) {
 
-		request = this._client.request(
-			http_method,
-			request_url,
-			headers,
-			http_method == 'GET' ? null : new_params,
-			this._signature
-		);
-		request.end();
-
-		this._signature.token = null;
-	}
-
-	request.on('response', function(response) {
 		response.setEncoding('utf8');
-		var data = '';
+		var body = '';
 		var err = null;
 
 		switch (response.statusCode) {
 			case 200:
 			case 201:
 				response.on('data', function(chunk) {
-					data += chunk;
+					body += chunk;
 				});
 				response.on('end', function() {
-					callback(null, JSON.parse(data));
+					var response = JSON.parse(body)
+					callback(null, response);
 				});
 				return;
 
 			case 400:
-				err = new Error('API call request is malformatted');
+				err = new Error('Servant SDK Error – API call request is malformatted');
 				break;
 
 			case 401:
-				err = new Error('API call request is unauthorized');
+				err = new Error('Servant SDK Error – API call request is unauthorized');
 				break;
 
 			case 403:
-				err = new Error('requested resource is not available');
+				err = new Error('Servant SDK Error – Requested resource is not available');
 				break;
 
 			case 404:
-				err = new Error('requested resource could not be found');
+				err = new Error('Servant SDK Error – Requested resource could not be found');
 				break;
 
 			case 409:
-				err = new Error('requested resource is currently locked and cannot be modified');
+				err = new Error('Servant SDK Error – Requested resource is currently locked and cannot be modified');
 				break;
 
 			case 500:
-				err = new Error('an error occurred in Servant API while processing the request');
+				err = new Error('Servant SDK Error – An error occurred in Servant API while processing the request');
 				break;
 
 			case 504:
-				err = new Error('the API timed out while processing the request');
+				err = new Error('Servant SDK Error – The API timed out while processing the request');
 				break;
 		}
 
@@ -291,6 +234,15 @@ Servant.prototype._callAPI = function(http_method, uri, visibility, param_types,
 		callback(err);
 
 	});
+
+	req.on('error', function(e) {
+		console.log('Servant SDK Error', e);
+	});
+
+	req.end();
+
 };
 
-exports.Servant = Servant;
+module.exports = function(client_key, client_secret, redirect_uri, api_version) {
+	return new Servant(client_key, client_secret, redirect_uri, api_version);
+};
