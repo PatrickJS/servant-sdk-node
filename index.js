@@ -32,11 +32,14 @@ var Servant = function(client_key, client_secret, redirect_uri, api_version) {
 
 	// Instantiate Oauth2 Client for User Authentication
 	if (!this._oauth2Client) {
+
 		var site = 'http://www.servant.co';
-		if (process.env.NODE_ENV === 'servanttest') {
+		// If Testing With Servant Development, Change process.env.NODE_ENV In App To 'servantlocal'
+		if (process.env.NODE_ENV === 'servantlocal') {
 			site = 'http://localhost:4000';
+			console.log("****** You Are Testing With A Local Copy Of Servant: " + site + " ******");
 		}
-		console.log("Servant Test? ", site)
+
 		this._oauth2Client = require('simple-oauth2')({
 			clientID: client_key,
 			clientSecret: client_secret,
