@@ -37,7 +37,7 @@ var Servant = function(client_key, client_secret, redirect_uri, api_version) {
 		// If Testing With Servant Development, Change process.env.NODE_ENV In App To 'servantlocal'
 		if (process.env.NODE_ENV === 'servantlocal') {
 			site = 'http://localhost:4000';
-			console.log("****** You Are Testing With A Local Copy Of Servant: " + site + " ******");
+			console.log("****** You Are Testing With A Local Copy Of Servant: " + site + " Change the process.env.NODE_ENV variable in server.js to development to test with the production version of Servant ******");
 		}
 
 		this._oauth2Client = require('simple-oauth2')({
