@@ -35,8 +35,8 @@ var Servant = function(client_id, client_secret, redirect_url, api_version) {
 
 		var site = 'http://www.servant.co';
 		// If Testing With Servant Development, Change process.env.NODE_ENV In App To 'servantlocal'
-		if (process.env.NODE_ENV === 'servantlocal') {
-			site = 'http://localhost:4000';
+		if (process.env.NODE_ENV === 'servant_development') {
+			site = 'http://lvh.me:4000';
 			console.log("****** You Are Testing With A Local Copy Of Servant: " + site + " Change the process.env.NODE_ENV variable in server.js to development to test with the production version of Servant ******");
 		}
 
@@ -55,7 +55,7 @@ var Servant = function(client_id, client_secret, redirect_url, api_version) {
 Servant.prototype.getAccessToken = function(req, callback) {
 
 	// If 'authenticated' param is available, the user has already authorized access to this client
-	if (req.query.authenticated && req.query.authenticated == 'true') return callback(null, req.query);
+	if (req.query.authorized && req.query.authorized == 'true') return callback(null, req.query);
 	// Convert the Request Token/Authorization Code into an Access Token
 	this._oauth2Client.AuthCode.getToken({
 		code: req.query.code,
