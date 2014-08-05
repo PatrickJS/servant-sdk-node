@@ -1,4 +1,5 @@
 var http = require('http'),
+	request = require('request'),
 	querystring = require('querystring'),
 	MethodTable = (JSON.parse(require('fs').readFileSync(__dirname + '/methods.json'))).results;
 
@@ -13,7 +14,14 @@ var Servant = function(client_id, client_secret, redirect_url, api_version) {
 
 	// Defaults
 	this._redirect_url = redirect_url;
-	this._version = '0.1.1';
+	this._client_id = client_id;
+	this._client_secret = client_secret;
+	this._api_version = api_version;
+	this._servant_url = process.env.NODE_ENV === 'servant_development' ? 'localhost' : 'www.servant.co';
+	this._version = '0.0.1';
+
+	// Warn if using with a local copy of Servant
+	if (process.env.NODE_ENV === 'servant_development') console.log(" ****** You Are Using Boilerplate With A Local Copy Of Servant ****** ")
 
 	// Load all API methods in methods.json for accessing Servant's API Resources
 	if (!this._methodsLoaded) {
@@ -30,43 +38,28 @@ var Servant = function(client_id, client_secret, redirect_url, api_version) {
 	}
 	this._methodsLoaded = false;
 
-	// Instantiate Oauth2 Client for User Authentication
-	if (!this._oauth2Client) {
-
-		var site = 'http://www.servant.co';
-		// If Testing With Servant Development, Change process.env.NODE_ENV In App To 'servantlocal'
-		if (process.env.NODE_ENV === 'servant_development') {
-			site = 'http://lvh.me:4000';
-			console.log("****** You Are Testing With A Local Copy Of Servant: " + site + " Change the process.env.NODE_ENV variable in server.js to development to test with the production version of Servant ******");
-		}
-
-		this._oauth2Client = require('simple-oauth2')({
-			clientID: client_id,
-			clientSecret: client_secret,
-			authorizationPath: '/connect/' + api_version + '/oauth2/authorize',
-			tokenPath: '/connect/' + api_version + '/oauth2/token',
-			site: site
-		});
-	}
-
-};
+}; // Instantiate Servant Constructor
 
 
 Servant.prototype.getAccessToken = function(req, callback) {
-
-	// If 'authenticated' param is available, the user has already authorized access to this client
+	// If 'authorized' param is available, the user has already authorized access to this client
 	if (req.query.authorized && req.query.authorized == 'true') return callback(null, req.query);
+
 	// Convert the Request Token/Authorization Code into an Access Token
-	this._oauth2Client.AuthCode.getToken({
-		code: req.query.code,
-		redirect_url: this._redirect_url
-	}, function(error, result) {
-		if (error) {
-			console.log(error);
-			return callback(new Error("Servant SDK Error – Access Token Error"));
-		}
-		return callback(null, result);
+	var options = {
+		hostname: this._servant_url,
+		path: '/connect/v0/oauth2/token?grant_type=authorization_code&client_id=' + this._client_id + '&client_secret=' + this._client_secret,
+		method: 'POST'
+	};
+	if (process.env.NODE_ENV === 'servant_development') options.port = 4000;
+
+	console.log(options);
+
+	var req = http.request(options, function(error, response, body) {
+		console.log("Got response: ", error, response, body);
+
 	});
+
 
 };
 
