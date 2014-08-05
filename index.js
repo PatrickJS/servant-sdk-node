@@ -16,7 +16,7 @@ var Servant = function(client_id, client_secret, redirect_url, api_version) {
 	this._client_id = client_id;
 	this._client_secret = client_secret;
 	this._api_version = api_version;
-	this._servant_url = process.env.NODE_ENV === 'servant_development' ? 'localhost' : 'www.servant.co';
+	this._servant_url = process.env.NODE_ENV === 'servant_development' ? 'lvh.me' : 'www.servant.co';
 	this._version = '0.0.1';
 
 	// Warn if using with a local copy of Servant
@@ -47,18 +47,29 @@ Servant.prototype.getAccessToken = function(req, callback) {
 	// Convert the Request Token/Authorization Code into an Access Token
 	var options = {
 		hostname: this._servant_url,
-		path: '/connect/v0/oauth2/token?grant_type=authorization_code&client_id=' + this._client_id + '&client_secret=' + this._client_secret,
-		method: 'POST'
+		path: '/connect/v0/oauth2/token?grant_type=authorization_code&client_id=' + this._client_id + '&client_secret=' + this._client_secret + '&redirect_url=' + this._redirect_url + '&code=' + req.query.code,
+		headers: {
+			accept: 'application/json'
+		}
 	};
+
 	if (process.env.NODE_ENV === 'servant_development') options.port = 4000;
 
-	console.log(options);
-
-	var req = http.request(options, function(error, response, body) {
-		console.log("Got response: ", error, response, body);
-
+	var request = http.get(options, function(res) {
+		res.setEncoding('utf8');
+		res.on('data', function(data) {
+			// If Error 
+			if (res.statusCode !== 200) return callback(JSON.parse(data), null);
+			// Return Access & Client Tokens
+			return callback(null, JSON.parse(data));
+		});
 	});
 
+	request.on('error', function(e) {
+		callback(e, null);
+	});
+
+	request.end();
 
 };
 
