@@ -1,5 +1,4 @@
 var http = require('http'),
-	request = require('request'),
 	querystring = require('querystring'),
 	MethodTable = (JSON.parse(require('fs').readFileSync(__dirname + '/methods.json'))).results;
 
