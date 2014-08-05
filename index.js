@@ -4,15 +4,15 @@ var http = require('http'),
 
 
 // Servant Constructor
-var Servant = function(client_id, client_secret, redirect_uri, api_version) {
+var Servant = function(client_id, client_secret, redirect_url, api_version) {
 
 	// Check for required parameters
-	if (!client_id || !client_secret || !redirect_uri || !api_version) {
-		throw new Error("Servant SDK Error – Please include all of the required parameters: client_id, client_secret, redirect_uri, api_version");
+	if (!client_id || !client_secret || !redirect_url || !api_version) {
+		throw new Error("Servant SDK Error – Please include all of the required parameters: client_id, client_secret, redirect_url, api_version");
 	}
 
 	// Defaults
-	this._redirect_uri = redirect_uri;
+	this._redirect_url = redirect_url;
 	this._version = '0.1.1';
 
 	// Load all API methods in methods.json for accessing Servant's API Resources
@@ -22,7 +22,7 @@ var Servant = function(client_id, client_secret, redirect_uri, api_version) {
 
 			Servant.prototype[method.name] = Servant.prototype._createMethod(
 				method.http_method,
-				method.uri,
+				method.url,
 				method.params
 			);
 		}
@@ -59,7 +59,7 @@ Servant.prototype.getAccessToken = function(req, callback) {
 	// Convert the Request Token/Authorization Code into an Access Token
 	this._oauth2Client.AuthCode.getToken({
 		code: req.query.code,
-		redirect_uri: this._redirect_uri
+		redirect_url: this._redirect_url
 	}, function(error, result) {
 		if (error) {
 			console.log(error);
