@@ -4,11 +4,11 @@ var http = require('http'),
 
 
 // Servant Constructor
-var Servant = function(client_key, client_secret, redirect_uri, api_version) {
+var Servant = function(client_id, client_secret, redirect_uri, api_version) {
 
 	// Check for required parameters
-	if (!client_key || !client_secret || !redirect_uri || !api_version) {
-		throw new Error("Servant SDK Error – Please include all of the required parameters: client_key, client_secret, redirect_uri, api_version");
+	if (!client_id || !client_secret || !redirect_uri || !api_version) {
+		throw new Error("Servant SDK Error – Please include all of the required parameters: client_id, client_secret, redirect_uri, api_version");
 	}
 
 	// Defaults
@@ -41,7 +41,7 @@ var Servant = function(client_key, client_secret, redirect_uri, api_version) {
 		}
 
 		this._oauth2Client = require('simple-oauth2')({
-			clientID: client_key,
+			clientID: client_id,
 			clientSecret: client_secret,
 			authorizationPath: '/connect/' + api_version + '/oauth2/authorize',
 			tokenPath: '/connect/' + api_version + '/oauth2/token',
@@ -251,6 +251,6 @@ Servant.prototype._callAPI = function(http_method, uri, param_types, params, tok
 
 };
 
-module.exports = function(client_key, client_secret, redirect_uri, api_version) {
-	return new Servant(client_key, client_secret, redirect_uri, api_version);
+module.exports = function(client_id, client_secret, redirect_uri, api_version) {
+	return new Servant(client_id, client_secret, redirect_uri, api_version);
 };
