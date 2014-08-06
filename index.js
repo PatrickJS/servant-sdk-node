@@ -29,7 +29,7 @@ var Servant = function(client_id, client_secret, redirect_url, api_version) {
 
 			Servant.prototype[method.name] = Servant.prototype._createMethod(
 				method.http_method,
-				method.url,
+				method.uri,
 				method.params
 			);
 		}
