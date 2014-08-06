@@ -160,7 +160,7 @@ Servant.prototype._callAPI = function(http_method, uri, param_types, params, tok
 
 	var headers = {
 		'Connection': 'Keep-Alive',
-		'Host': 'www.servant.co',
+		'Host': this._servant_url,
 		'Content-Type': 'application/json',
 		'User-Agent': 'Servant Node SDK ' + this._version
 	};
@@ -181,7 +181,7 @@ Servant.prototype._callAPI = function(http_method, uri, param_types, params, tok
 	var request;
 
 	var options = {
-		host: 'www.servant.co',
+		host: this._servant_url,
 		port: 80,
 		path: request_url,
 		method: http_method,
