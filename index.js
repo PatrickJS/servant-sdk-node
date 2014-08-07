@@ -1,3 +1,12 @@
+/**
+ *
+ *
+ *  Servant NODE SDK - https://github.com/servant-cms/servant-node-sdk
+ *
+ * 
+ */
+
+
 var request = require('request'),
 	querystring = require('querystring'),
 	MethodTable = (JSON.parse(require('fs').readFileSync(__dirname + '/methods.json'))).results;
