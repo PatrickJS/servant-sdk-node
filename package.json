@@ -22,8 +22,7 @@
   "author": "Austen Collins <austen@servant.co> (http://servant.co/)",
   "license": "MIT",
   "dependencies": {
-    "request": "2.40.0",
-    "xtraverse": "0.1.x"
+    "request": "2.40.0"
   },
   "bugs": {
     "url": "https://github.com/ac360/servant-node-sdk/issues"

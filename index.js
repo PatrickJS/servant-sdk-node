@@ -1,4 +1,4 @@
-var http = require('http'),
+var request = require('request'),
 	querystring = require('querystring'),
 	MethodTable = (JSON.parse(require('fs').readFileSync(__dirname + '/methods.json'))).results;
 
@@ -16,7 +16,6 @@ var Servant = function(client_id, client_secret, redirect_url, api_version) {
 	this._client_id = client_id;
 	this._client_secret = client_secret;
 	this._api_version = api_version;
-	this._servant_url = process.env.NODE_ENV === 'servant_development' ? 'lvh.me' : 'www.servant.co';
 	this._version = '0.0.1';
 
 	// Warn if using with a local copy of Servant
@@ -41,37 +40,33 @@ var Servant = function(client_id, client_secret, redirect_url, api_version) {
 
 
 Servant.prototype.getAccessToken = function(req, callback) {
+
 	// If 'authorized' param is available, the user has already authorized access to this client
 	if (req.query.authorized && req.query.authorized == 'true') return callback(null, req.query);
 
-	// Convert the Request Token/Authorization Code into an Access Token
-	var options = {
-		hostname: this._servant_url,
-		path: '/connect/v0/oauth2/token?grant_type=authorization_code&client_id=' + this._client_id + '&client_secret=' + this._client_secret + '&redirect_url=' + this._redirect_url + '&code=' + req.query.code,
-		headers: {
-			accept: 'application/json'
-		}
+	var servant_host = process.env.NODE_ENV === 'servant_development' ? 'localhost:4000' : 'www.servant.co';
+
+	var headers = {
+		'Connection': 'Keep-Alive',
+		'Host': servant_host,
+		'Content-Type': 'application/json',
+		'User-Agent': 'Servant Node SDK ' + this._version
 	};
 
-	if (process.env.NODE_ENV === 'servant_development') options.port = 4000;
+	var options = {
+		method: 'GET',
+		headers: headers
+	};
+	options.url = process.env.NODE_ENV === 'servant_development' ? 'http://localhost:4000' : 'http://www.servant.co';
+	options.url = options.url + '/connect/v0/oauth2/token?grant_type=authorization_code&client_id=' + this._client_id + '&client_secret=' + this._client_secret + '&redirect_url=' + this._redirect_url + '&code=' + req.query.code;
 
-	var request = http.get(options, function(res) {
-		res.setEncoding('utf8');
-		res.on('data', function(data) {
-			// If Error 
-			if (res.statusCode !== 200) return callback(JSON.parse(data), null);
-			// Return Access & Client Tokens
-			return callback(null, JSON.parse(data));
-		});
+	request(options, function(error, response, body) {
+		if (error) return callback(error, null);
+		if (response.statusCode !== 200) return callback(JSON.parse(body), null);
+		if (response.statusCode == 200) return callback(null, JSON.parse(body));
 	});
 
-	request.on('error', function(e) {
-		callback(e, null);
-	});
-
-	request.end();
-
-};
+}; // getAccessToken
 
 
 // Create An API Method for each Method listed in Methods.json
@@ -136,7 +131,7 @@ Servant.prototype._formatURI = function(uri, params) {
 
 
 
-// Makes API calls to Servant's resrouces
+// Makes API calls to Servant's resources
 Servant.prototype._callAPI = function(http_method, uri, param_types, params, token, callback) {
 
 	var new_params = {},
@@ -158,14 +153,8 @@ Servant.prototype._callAPI = function(http_method, uri, param_types, params, tok
 		}
 	}
 
-	var headers = {
-		'Connection': 'Keep-Alive',
-		'Host': this._servant_url,
-		'Content-Type': 'application/json',
-		'User-Agent': 'Servant Node SDK ' + this._version
-	};
-
-	var request_url = '';
+	var headers = {},
+		request_url = '';
 
 	try {
 		request_url = this._formatURI(uri, new_params);
@@ -178,80 +167,18 @@ Servant.prototype._callAPI = function(http_method, uri, param_types, params, tok
 		headers['Content-Length'] = 0;
 	}
 
-	var request;
-
+	// Perform API Request
 	var options = {
-		host: this._servant_url,
-		port: 80,
-		path: request_url,
-		method: http_method,
-		headers: headers
+		method: http_method
 	};
+	options.url = process.env.NODE_ENV === 'servant_development' ? 'http://api.localhost:4000' : 'http://api.servant.co';
+	options.url = options.url + request_url;
 
-	var req = http.request(options, function(response) {
-
-		response.setEncoding('utf8');
-		var body = '';
-		var err = null;
-
-		switch (response.statusCode) {
-			case 200:
-			case 201:
-				response.on('data', function(chunk) {
-					body += chunk;
-				});
-				response.on('end', function() {
-					var response = JSON.parse(body)
-					callback(null, response);
-				});
-				return;
-
-			case 400:
-				err = new Error('Servant SDK Error – API call request is malformatted');
-				break;
-
-			case 401:
-				err = new Error('Servant SDK Error – API call request is unauthorized');
-				break;
-
-			case 403:
-				err = new Error('Servant SDK Error – Requested resource is not available');
-				break;
-
-			case 404:
-				err = new Error('Servant SDK Error – Requested resource could not be found');
-				break;
-
-			case 409:
-				err = new Error('Servant SDK Error – Requested resource is currently locked and cannot be modified');
-				break;
-
-			case 500:
-				err = new Error('Servant SDK Error – An error occurred in Servant API while processing the request');
-				break;
-
-			case 504:
-				err = new Error('Servant SDK Error – The API timed out while processing the request');
-				break;
-		}
-
-		if (!err) {
-			err = new Error('API call failed due to unknown error');
-		}
-
-		err.statusCode = response.statusCode;
-		err.errorCode = response.headers['x-mashery-error-code'] || null;
-		err.url = request_url;
-		callback(err);
-
+	request(options, function(error, response, body) {
+		if (error) return callback(error, null);
+		if (response.statusCode !== 200) return callback(JSON.parse(body), null);
+		if (response.statusCode == 200) return callback(null, JSON.parse(body));
 	});
-
-	req.on('error', function(e) {
-		console.log('Servant SDK Error', e);
-	});
-
-	req.end();
-
 };
 
 module.exports = function(client_id, client_secret, redirect_uri, api_version) {
