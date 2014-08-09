@@ -17,7 +17,7 @@ var Servant = function(client_id, client_secret, redirect_url, api_version) {
 
 	// Check for required parameters
 	if (!client_id || !client_secret || !redirect_url || typeof api_version === 'undefined') {
-		throw new Error("Servant SDK Error – Please include all of the required parameters: client_id, client_secret, redirect_url, api_version");
+		throw new Error("Servant SDK Error – Please include all of the required parameters: client_id, client_secret, redirect_url, api_version.  Here is what you entered in order: ", client_id, client_secret, redirect_url, api_version);
 	}
 
 	// Defaults
