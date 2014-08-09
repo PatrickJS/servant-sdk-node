@@ -6,7 +6,7 @@
       "defaults": null,
       "name": "getUser",
       "description": "Get the Servant account owner's user data",
-      "uri": "/v0/:token/user",
+      "uri": "/data/:token/user",
       "params": {
          "token": "string"
       },
@@ -16,7 +16,7 @@
       "defaults": null,
       "name": "getProducts",
       "description": "Get the most recent products",
-      "uri": "/v0/:token/servants/:servantID/products",
+      "uri": "/data/:token/servants/:servantID/products",
       "params": {
          "token": "string",
          "servantID": "string"
