@@ -1,7 +1,7 @@
 /**
  *
  *
- *  Servant NODE SDK - https://github.com/servant-cms/servant-node-sdk
+ *  Servant SDK for Node.js - https://github.com/servant-cmes/servant-sdk-node
  *
  *
  */
