@@ -16,7 +16,7 @@ var request = require('request'),
 var Servant = function(client_id, client_secret, redirect_url, api_version) {
 
 	// Check for required parameters
-	if (!client_id || !client_secret || !redirect_url || !api_version) {
+	if (!client_id || !client_secret || !redirect_url || typeof api_version === 'undefined') {
 		throw new Error("Servant SDK Error – Please include all of the required parameters: client_id, client_secret, redirect_url, api_version");
 	}
 
