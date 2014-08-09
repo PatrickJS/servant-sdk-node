@@ -3,7 +3,7 @@
  *
  *  Servant NODE SDK - https://github.com/servant-cms/servant-node-sdk
  *
- * 
+ *
  */
 
 
@@ -180,7 +180,8 @@ Servant.prototype._callAPI = function(http_method, uri, param_types, params, tok
 	var options = {
 		method: http_method
 	};
-	options.url = process.env.NODE_ENV === 'servant_development' ? 'http://api.localhost:4000' : 'http://api.servant.co';
+	options.url = 'api' + this._api_version;
+	options.url = process.env.NODE_ENV === 'servant_development' ? 'http://' + options.url + '.localhost:4000' : 'http://' + options.url + '.servant.co';
 	options.url = options.url + request_url;
 
 	request(options, function(error, response, body) {
