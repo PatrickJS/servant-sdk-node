@@ -6,15 +6,11 @@ module.exports.run = function(callback) {
 	var ZSchema = require("z-schema");
 	var validator = new ZSchema();
 	var test = require('tape');
-	var DataArchetypes = require('../index');
-	var DATs = new DataArchetypes();
+	var JSONArchetypes = require('../index');
 
-	/**
-	 * Receipt Archetype Schema Test
-	 */
 
 	test('****** Test Receipt Archetype Schema', function(t) {
-		validator.validateSchema(DATs.schemas.receipt, function(err, report) {
+		validator.validateSchema(JSONArchetypes.receipt, function(err, report) {
 			t.equal(report.valid, true, 'Schema is valid per JSON Schema v4');
 			t.end();
 		});
