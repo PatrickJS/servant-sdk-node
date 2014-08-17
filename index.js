@@ -6,8 +6,8 @@
 
 
 var request = require('request'),
-	jsonarchetypes = require('json-archetypes'),
 	querystring = require('querystring'),
+	jsonarchetypes = require('json-archetypes'),
 	MethodTable = (JSON.parse(require('fs').readFileSync(__dirname + '/methods.json'))).results;
 
 /**
@@ -147,6 +147,7 @@ Servant.prototype._formatURI = function(uri, params) {
 /**
  * Make API calls to Servant Resources
  */
+
 Servant.prototype._callAPI = function(http_method, uri, param_types, params, token, callback) {
 
 	var new_params = {},
@@ -202,16 +203,7 @@ Servant.prototype._callAPI = function(http_method, uri, param_types, params, tok
  * Instantiate Data Archetypes
  */
 
-Servant.prototype.newArchetype = function(name) {
-	var name = name.toLowerCase();
-	if (typeof name !== 'string') throw new Error('Servant SDK Error - The newArchetype() method only accept a string for a name parameter');
-	if (jsonarchetypes[name] === 'undefined') throw new Error('Servant SDK Error - You have entered a JSON Archetype that does not exist: ' + name);
-	var instance = {};
-	for (property in jsonarchetypes[name].properties) {
-		instance[property] = jsonarchetypes[name].properties[property].default;
-	}
-	return instance;
-};
+Servant.prototype.newArchetype = require('./components/instantiation');
 
 
 module.exports = function(client_id, client_secret, redirect_uri, api_version) {
