@@ -7,7 +7,6 @@
 
 var request = require('request'),
 	querystring = require('querystring'),
-	jsonarchetypes = require('json-archetypes'),
 	MethodTable = (JSON.parse(require('fs').readFileSync(__dirname + '/methods.json'))).results;
 
 /**

@@ -2,6 +2,8 @@
  * Instantiate Data Archetypes
  */
 
+var jsonarchetypes = require('json-archetypes');
+
 module.exports = function(name) {
 	var name = name.toLowerCase();
 	if (typeof name !== 'string') throw new Error('Servant SDK Error - The newArchetype() method only accept a string for a name parameter');
