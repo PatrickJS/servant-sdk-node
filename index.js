@@ -1,18 +1,18 @@
 /**
  *
- *
  *  Servant SDK for Node.js - https://github.com/servant-cmes/servant-sdk-node
- *
  *
  */
 
 
 var request = require('request'),
+	jsonarchetypes = require('json-archetypes'),
 	querystring = require('querystring'),
 	MethodTable = (JSON.parse(require('fs').readFileSync(__dirname + '/methods.json'))).results;
 
-
-// Servant Constructor
+/**
+ * Servant Constructor
+ */
 var Servant = function(client_id, client_secret, redirect_url, api_version) {
 
 	// Check for required parameters
@@ -48,6 +48,9 @@ var Servant = function(client_id, client_secret, redirect_url, api_version) {
 }; // Instantiate Servant Constructor
 
 
+/**
+ * Exchange a request token for an access token
+ */
 Servant.prototype.getAccessToken = function(req, callback) {
 
 	// If 'authorized' param is available, the user has already authorized access to this client
@@ -77,8 +80,9 @@ Servant.prototype.getAccessToken = function(req, callback) {
 
 }; // getAccessToken
 
-
-// Create An API Method for each Method listed in Methods.json
+/**
+ * Create An API Method for each Method listed in Methods.json
+ */
 Servant.prototype._createMethod = function(http_method, uri, param_types) {
 
 	return function(params, callback) {
@@ -95,8 +99,9 @@ Servant.prototype._createMethod = function(http_method, uri, param_types) {
 	};
 };
 
-
-// Parses URI and separates Params and other useful things
+/**
+ * Parses URI and separates Params and other useful things
+ */
 Servant.prototype._formatURI = function(uri, params) {
 	var uri_builder = [this._call_base];
 	var idx = 0,
@@ -139,8 +144,9 @@ Servant.prototype._formatURI = function(uri, params) {
 };
 
 
-
-// Makes API calls to Servant's resources
+/**
+ * Make API calls to Servant Resources
+ */
 Servant.prototype._callAPI = function(http_method, uri, param_types, params, token, callback) {
 
 	var new_params = {},
@@ -190,6 +196,13 @@ Servant.prototype._callAPI = function(http_method, uri, param_types, params, tok
 		if (response.statusCode == 200) return callback(null, JSON.parse(body));
 	});
 };
+
+/**
+ * Instantiate Data Archetypes
+ */
+
+console.log(jsonarchetypes);
+
 
 module.exports = function(client_id, client_secret, redirect_uri, api_version) {
 	return new Servant(client_id, client_secret, redirect_uri, api_version);
