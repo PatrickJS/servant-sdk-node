@@ -22,7 +22,7 @@
   "author": "Austen Collins <austen@servant.co> (http://servant.co/)",
   "license": "MIT",
   "dependencies": {
-    "json-archetypes": "0.0.0",
+    "json-archetypes": "git://github.com/servant-cmes/json-archetypes.git",
     "request": "2.40.0"
   },
   "bugs": {
