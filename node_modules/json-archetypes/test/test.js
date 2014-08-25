@@ -21,5 +21,5 @@ async.eachSeries(tests, function(test, testCallback) {
 		testCallback();
 	});
 }, function() {
-	console.log("****** Tests Completed ******");
+	// Done
 });

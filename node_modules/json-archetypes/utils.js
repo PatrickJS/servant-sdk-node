@@ -195,7 +195,40 @@ var Utils = {
             }
         });
         return rv;
+    },
+    isDateTime: function(dateTime) {
+        // Separate DateTime
+        var s = dateTime.toLowerCase().split("t");
+        
+        // Check Date
+        var matches1 = /^([0-9]{4})-([0-9]{2})-([0-9]{2})$/.exec(s[0]);
+        if (matches1 === null) {
+            return false;
+        }
+        // var year = matches[1];
+        // var month = matches[2];
+        // var day = matches[3];
+        if (matches1[2] < "01" || matches1[2] > "12" || matches1[3] < "01" || matches1[3] > "31") {
+            return false;
+        }
+
+        // Check Time
+        var matches2 = /^([0-9]{2}):([0-9]{2}):([0-9]{2})(.[0-9]+)?(z|([+-][0-9]{2}:[0-9]{2}))$/.exec(s[1]);
+        if (matches2 === null) {
+            return false;
+        }
+        // var hour = matches[1];
+        // var minute = matches[2];
+        // var second = matches[3];
+        // var fraction = matches[4];
+        // var timezone = matches[5];
+        if (matches2[1] > "23" || matches2[2] > "59" || matches2[3] > "59") {
+            return false;
+        }
+        return true;
     }
 };
 
 module.exports = Utils;
+
+

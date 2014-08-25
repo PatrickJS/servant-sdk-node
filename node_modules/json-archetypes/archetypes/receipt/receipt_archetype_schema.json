@@ -8,7 +8,7 @@
 		"transaction_date": {
 			"type": "string",
 			"description": "Date and time of the transaction in ISO 8601 date standard e.g. YYYY-MM-DDThh:mm:ss.sTZD",
-			"format": "date",
+			"format": "date-time",
 			"default": ""
 		},
 		"price_total": {
