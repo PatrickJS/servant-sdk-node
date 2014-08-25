@@ -6,22 +6,11 @@
       "defaults": null,
       "name": "getUser",
       "description": "Get the Servant account owner's user data",
-      "uri": "/data/:token/user",
+      "uri": "/data/:access_token/user",
       "params": {
-         "token": "string"
+         "access_token": "string"
       },
       "type": "User",
-      "http_method": "GET"
-   }, {
-      "defaults": null,
-      "name": "getProducts",
-      "description": "Get the most recent products",
-      "uri": "/data/:token/servants/:servantID/products",
-      "params": {
-         "token": "string",
-         "servantID": "string"
-      },
-      "type": "Products",
       "http_method": "GET"
    }]
 }

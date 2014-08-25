@@ -162,6 +162,7 @@
 			"type": "integer",
 			"description": "Product price in cents as an integer (whole number)",
 			"minimum": 0,
+			"maximum": 999999999999999,
 			"default": 0
 		},
 		"in_stock": {

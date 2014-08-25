@@ -12,9 +12,9 @@
 			"default": ""
 		},
 		"completed": {
-			"type": "boolean",
-			"description": "Boolean to indicate whether the task has been completed",
-			"default": false
+			"enum": ["not completed", "completed", "on hold"],
+			"description": "Three options in string format to describe status of the task",
+			"default": "not completed"
 		},
 		"list": {
 			"type": "string",
