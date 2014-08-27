@@ -65,6 +65,11 @@
             "format": "uri",
             "maxLength": 500,
             "default": ""
+        },
+        "draft": {
+            "type": "boolean",
+            "description": "Is the Archetype instance in draft mode or published",
+            "default": false
         }
     }
 }

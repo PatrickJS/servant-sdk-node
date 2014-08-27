@@ -48,6 +48,11 @@
 			"maxLength": 5000,
 			"default": ""
 		},
+		"draft": {
+			"type": "boolean",
+			"description": "Is the Archetype instance in draft mode or published",
+			"default": false
+		},
 		"primary_image_archetype": {
 			"type": "string",
 			"description": "Image Archetype ID to use as the primary image of this product",
