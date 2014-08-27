@@ -5,7 +5,6 @@
  */
 
 
-
 /**
  * Options Object to share data
  */
@@ -94,4 +93,4 @@ module.exports = function(client_id, client_secret, redirect_uri, api_version) {
 
 
 
-// End
+// The End
