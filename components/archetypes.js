@@ -347,6 +347,12 @@ module.exports.validate = function(ServantDefaults, archetype, instance, callbac
 
     var errors = {};
 
+    // Check Instance
+    if (!instance || _utilities.whatIs(instance) !== 'object') {
+        errors.schema = 'You did not submit a valid object to validate';
+        return callback(errors, null);
+    }
+
     // Check Required Fields.  JSON Archetypes always have required fields
     var required = _validators.required(archetype.required, instance);
     if (required) {

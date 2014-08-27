@@ -7,7 +7,21 @@ module.exports.run = function(callback) {
 	var test = require('tape');
 
 
+
 	test('****** Test Validations Part 1', function(t) {
+		// Test validating a NON-OBJECT
+
+		// Run Validation
+		Servant.validate('receipt', ['yada', 'aslfjaslf'], function(errors, receipt1) {
+			t.equal(typeof errors !== 'undefined', true);
+			t.equal(typeof errors.schema !== 'undefined', true);
+			console.log(errors);
+			t.end();
+		});
+	});
+
+
+	test('****** Test Validations Part 2', function(t) {
 		var product = Servant.new('product');
 		// Test REQUIRED - Missing Seler & Title
 		// Test MAXIMUM
@@ -45,7 +59,7 @@ module.exports.run = function(callback) {
 		});
 	});
 
-	test('****** Test Validations Part 2', function(t) {
+	test('****** Test Validations Part 3', function(t) {
 		var receipt = Servant.new('receipt');
 		// Test FORMAT DATETIME
 		receipt.transaction_date = 'asfkljasf';
@@ -64,7 +78,7 @@ module.exports.run = function(callback) {
 		});
 	});
 
-	test('****** Test Validations Part 3', function(t) {
+	test('****** Test Validations Part 4', function(t) {
 		var receipt1 = Servant.new('receipt');
 		// Test PROPERTY NOT ALLOWED & INVALID TYPES
 		receipt1.products = [{
