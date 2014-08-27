@@ -3,7 +3,48 @@
  */
 
 
+// Dependencies
+var JATs = require('json-archetypes');
+
+
+
+/**
+ * Utilities
+ */
+
 var _utilities = {};
+
+_utilities.whatIs = function(what) {
+
+    var to = typeof what;
+
+    if (to === 'object') {
+        if (what === null) {
+            return 'null';
+        }
+        if (Array.isArray(what)) {
+            return 'array';
+        }
+        return 'object'; // typeof what === 'object' && what === Object(what) && !Array.isArray(what);
+    }
+
+    if (to === 'number') {
+        if (Number.isFinite(what)) {
+            if (what % 1 === 0) {
+                return 'integer';
+            } else {
+                return 'number';
+            }
+        }
+        if (Number.isNaN(what)) {
+            return 'not-a-number';
+        }
+        return 'unknown-number';
+    }
+
+    return to; // undefined, boolean, string, function
+
+};
 
 _utilities.areEqual = function(json1, json2) {
     if (json1 === json2) {
@@ -21,7 +62,7 @@ _utilities.areEqual = function(json1, json2) {
         // items at the same index are equal according to this definition; or
         len = json1.length;
         for (i = 0; i < len; i++) {
-            if (!_utilities.areEqual.call(this, json1[i], json2[i])) {
+            if (!_utilities.areEqual(json1[i], json2[i])) {
                 return false;
             }
         }
@@ -29,17 +70,17 @@ _utilities.areEqual = function(json1, json2) {
     }
 
     // If both are objects
-    if (_utilities.whatIs.call(this, json1) === 'object' && _utilities.whatIs.call(this, json2) === 'object') {
+    if (_utilities.whatIs(json1) === 'object' && _utilities.whatIs(json2) === 'object') {
         // have the same set of property names; and
         var keys1 = Object.keys(json1);
         var keys2 = Object.keys(json2);
-        if (!_utilities.areEqual.call(this, keys1, keys2)) {
+        if (!_utilities.areEqual(keys1, keys2)) {
             return false;
         }
         // values for a same property name are equal according to this definition.
         len = keys1.length;
         for (i = 0; i < len; i++) {
-            if (!_utilities.areEqual.call(this, json1[keys1[i]], json2[keys1[i]])) {
+            if (!_utilities.areEqual(json1[keys1[i]], json2[keys1[i]])) {
                 return false;
             }
         }
@@ -53,7 +94,7 @@ _utilities.isUniqueArray = function(arr, indexes) {
     var i, j, l = arr.length;
     for (i = 0; i < l; i++) {
         for (j = i + 1; j < l; j++) {
-            if (_utilities.areEqual.call(this, arr[i], arr[j])) {
+            if (_utilities.areEqual(arr[i], arr[j])) {
                 if (indexes) {
                     indexes.push(i, j);
                 }
@@ -127,6 +168,8 @@ _utilities.formatValidators = {
 }; // _utilities.formatValidators
 
 
+
+
 /**
  * Validator
  */
@@ -170,14 +213,14 @@ _validators = {
         if (!Array.isArray(array))
             return;
         if (rules.uniqueItems === true) {
-            if (_utilities.isUniqueArray.call(this, array, []) === false) return 'No duplicates allowed';
+            if (_utilities.isUniqueArray(array, []) === false) return 'No duplicates allowed';
         }
     },
     enum: function(rules, value) {
         var match = false,
             idx = rules.enum.length;
         while (idx--) {
-            if (_utilities.areEqual.call(this, value, rules.enum[idx])) {
+            if (_utilities.areEqual(value, rules.enum[idx])) {
                 match = true;
                 break;
             }
@@ -185,7 +228,7 @@ _validators = {
         if (match === false) return value + ' is not an allowed option';
     },
     format: function(rules, value) {
-        if (!_utilities.formatValidators[rules.format].call(this, value))
+        if (!_utilities.formatValidators[rules.format](value))
             return 'Is not in a valid ' + rules.format + ' format';
 
     },
@@ -206,7 +249,7 @@ _validateProperty = function(errors, rules, value, property) {
     var idx = keys.length;
     while (idx--) {
         if (_validators[keys[idx]]) {
-            var error = _validators[keys[idx]].call(this, rules, value, property);
+            var error = _validators[keys[idx]](rules, value, property);
             if (error) errors[property] = error;
         }
     };
@@ -220,13 +263,12 @@ _validateArray = function(errors, rules, array, property) {
         if (!errors[arrayproperty + '_array'][index]) errors[arrayproperty + '_array'][index] = {};
         return errors[arrayproperty + '_array'][index][objectproperty] = err;
     };
-    var self = this;
     // Validate Array Root Schema
     var keys = Object.keys(rules);
     var idx = keys.length;
     while (idx--) {
-        if (self._validators[keys[idx]]) {
-            var error = self._validators[keys[idx]].call(self, rules, array, property);
+        if (_validators[keys[idx]]) {
+            var error = _validators[keys[idx]](rules, array, property);
             if (error) errors[property] = error;
         }
     };
@@ -234,19 +276,19 @@ _validateArray = function(errors, rules, array, property) {
     // Iterate Through Array
     array.forEach(function(item, i) {
         if (rules.items.type !== 'object') {
-            if (self._utilities.whatIs.call(self, item) !== rules.items.type) {
+            if (_utilities.whatIs(item) !== rules.items.type) {
                 createArrayError(errors, property, null, i, 'Invalid type');
             } else {
-                var error = self._validateProperty(errors, rules.items, item, property);
+                var error = _validateProperty(errors, rules.items, item, property);
                 if (error) createArrayError(errors, property, null, i, error);
             }
         } else if (rules.items.type === 'object') {
             // Check type of item first
-            if (self._utilities.whatIs.call(self, item) !== 'object') {
+            if (_utilities.whatIs(item) !== 'object') {
                 createArrayError(errors, property, null, i, 'Invalid type.  Must be an object');
             } else {
                 // Check Required Fields
-                var error = self._validators.required(rules.items.required, item);
+                var error = _validators.required(rules.items.required, item);
                 if (error) {
                     for (prop in error) {
                         createArrayError(errors, property, prop, i, error[prop]);
@@ -264,13 +306,13 @@ _validateArray = function(errors, rules, array, property) {
                             var keys3 = Object.keys(rules.items.properties[keys2[idx2]]);
                             var idx3 = keys3.length;
                             // Check Type
-                            if (rules.items.properties[keys2[idx2]].type && self._utilities.whatIs.call(self, item[keys2[idx2]]) !== rules.items.properties[keys2[idx2]].type) {
+                            if (rules.items.properties[keys2[idx2]].type && _utilities.whatIs(item[keys2[idx2]]) !== rules.items.properties[keys2[idx2]].type) {
                                 createArrayError(errors, property, keys2[idx2], i, 'Invalid Type');
                             } else {
                                 // Other Validations
                                 while (idx3--) {
-                                    if (self._validators[keys3[idx3]]) {
-                                        var error = self._validators[keys3[idx3]].call(self, rules.items.properties[keys2[idx2]], item[keys2[idx2]]);
+                                    if (_validators[keys3[idx3]]) {
+                                        var error = _validators[keys3[idx3]](rules.items.properties[keys2[idx2]], item[keys2[idx2]]);
                                         if (error && (!errors[property] || !errors[property][i] || !errors[property][i][keys2[idx2]])) createArrayError(errors, property, keys2[idx2], i, error);
                                     }
                                 };
@@ -284,19 +326,25 @@ _validateArray = function(errors, rules, array, property) {
 };
 
 
-// Validate Instances of Archetypes
-module.exports.validate = function(ServantOptions, archetype, instance, callback) {
+
+
+/**
+ * Validate Instances of Archetypes
+ */
+
+module.exports.validate = function(ServantDefaults, archetype, instance, callback) {
 
     // Prepare Archetype
     if (typeof archetype !== 'string') {
         throw new Error('Archetype parameter must be a string');
-    } else if (!_archetypes[archetype]) {
-        throw new Error('The archetype you entered has not been registered.  Please register it using the addArchetype method');
+    } else if (!JATs.archetypes[archetype]) {
+        throw new Error('The archetype you entered does not exist: ' + archetype);
     } else {
-        archetype = _archetypes[archetype];
+        archetype = JATs.archetypes[archetype];
     }
 
     var errors = {};
+
     // Check Required Fields.  JSON Archetypes always have required fields
     var required = _validators.required(archetype.required, instance);
     if (required) {
@@ -312,9 +360,9 @@ module.exports.validate = function(ServantOptions, archetype, instance, callback
         // Check If Allowed Property, Check Type, Check If Array, Validate
         if (!archetype.properties[keys1[idx1]]) {
             errors[keys1[idx1]] = keys1[idx1] + ' is not allowed';
-        } else if (archetype.properties[keys1[idx1]] && archetype.properties[keys1[idx1]].type && _utilities.whatIs.call(this, instance[keys1[idx1]]) !== archetype.properties[keys1[idx1]].type) {
+        } else if (archetype.properties[keys1[idx1]] && archetype.properties[keys1[idx1]].type && _utilities.whatIs(instance[keys1[idx1]]) !== archetype.properties[keys1[idx1]].type) {
             errors[keys1[idx1]] = 'Invalid type';
-        } else if (archetype.properties[keys1[idx1]] && _utilities.whatIs.call(this, instance[keys1[idx1]]) === 'array' && instance[keys1[idx1]].length) {
+        } else if (archetype.properties[keys1[idx1]] && _utilities.whatIs(instance[keys1[idx1]]) === 'array' && instance[keys1[idx1]].length) {
             _validateArray(errors, archetype.properties[keys1[idx1]], instance[keys1[idx1]], keys1[idx1]);
         } else {
             _validateProperty(errors, archetype.properties[keys1[idx1]], instance[keys1[idx1]], keys1[idx1]);
@@ -329,18 +377,23 @@ module.exports.validate = function(ServantOptions, archetype, instance, callback
 }; // validate
 
 
-// Instantiate Instances of Archetypes
+
+
+/**
+ * Instantiate Instances of Archetypes
+ */
+
 module.exports.instantiate = function(archetype) {
     if (typeof archetype !== 'string') throw new Error('The new() method only accept a string for a name parameter');
     var archetype = archetype.toLowerCase();
-    if (!_archetypes[archetype]) throw new Error('This JSON Archetype has not been registered: ' + archetype + '. Make sure you add it using the addArchetype method');
+    if (!JATs.archetypes[archetype]) throw new Error('JSON Archetype does not exist: ' + archetype);
 
     var instance = {};
-    for (property in _archetypes[archetype].properties) {
-        if (_archetypes[archetype].properties[property].type !== 'array' && _archetypes[archetype].properties[property].type !== 'object')
-            instance[property] = _archetypes[archetype].properties[property].default;
+    for (property in JATs.archetypes[archetype].properties) {
+        if (JATs.archetypes[archetype].properties[property].type !== 'array' && JATs.archetypes[archetype].properties[property].type !== 'object')
+            instance[property] = JATs.archetypes[archetype].properties[property].default;
         else
-            instance[property] = _archetypes[archetype].properties[property].default.slice();
+            instance[property] = JATs.archetypes[archetype].properties[property].default.slice();
     }
     return instance;
 }; // instantiate

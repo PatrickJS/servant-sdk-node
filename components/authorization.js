@@ -2,6 +2,14 @@
  * Authorization Methods to authorize Apps with Servant
  */
 
+// Dependencies
+var request = require('request');
+
+
+
+/**
+ *  Exchange AuthorizationCode for AccessToken
+ */
 
 module.exports.exchangeAuthCode = function(ServantDefaults, req, callback) {
 	// Check if User is authorized or not by which params have been received
@@ -39,6 +47,10 @@ module.exports.exchangeAuthCode = function(ServantDefaults, req, callback) {
 
 
 
+/**
+ *  Refresh AccessToken via RefreshToken
+ */
+
 module.exports.refreshAccessToken = function(ServantDefaults, refresh_token, callback) {
 	// Check if SDK is being used to test with a local version of Servant
 	var servant_host = process.env.NODE_ENV === 'servant_development' ? 'localhost:4000' : 'www.servant.co';
@@ -64,5 +76,6 @@ module.exports.refreshAccessToken = function(ServantDefaults, refresh_token, cal
 	});
 
 }; // refreshAccessToken 
+
 
 // End

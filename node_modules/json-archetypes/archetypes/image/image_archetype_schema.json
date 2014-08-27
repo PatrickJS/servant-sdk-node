@@ -6,6 +6,34 @@
     "additionalProperties": false,
     "required": ["resolution_original, resolution_large, resolution_medium, resolution_small"],
     "properties": {
+        "resolution_original": {
+            "type": "string",
+            "description": "URL (as per RFC 3986) to a picture in JPEG, PNG or GIF format at the original resolution it had when it was uploaded",
+            "format": "uri",
+            "maxLength": 1000,
+            "default": ""
+        },
+        "resolution_large": {
+            "type": "string",
+            "description": "URL (as per RFC 3986) to a picture in JPEG, PNG or GIF format at the large resolution it had when it was uploaded",
+            "format": "uri",
+            "maxLength": 1000,
+            "default": ""
+        },
+        "resolution_medium": {
+            "type": "string",
+            "description": "URL (as per RFC 3986) to a picture in JPEG, PNG or GIF format at the medium resolution it had when it was uploaded",
+            "format": "uri",
+            "maxLength": 1000,
+            "default": ""
+        },
+        "resolution_small": {
+            "type": "string",
+            "description": "URL (as per RFC 3986) to a picture in JPEG, PNG or GIF format at the small resolution it had when it was uploaded",
+            "format": "uri",
+            "maxLength": 1000,
+            "default": ""
+        },
         "title": {
             "type": "string",
             "description": "The title of the image",
@@ -36,34 +64,6 @@
             "description": "A URL (as per RFC 3986) to the project file of the image (e.g., A Photoshop file - PSD)",
             "format": "uri",
             "maxLength": 500,
-            "default": ""
-        },
-        "resolution_original": {
-            "type": "string",
-            "description": "URL (as per RFC 3986) to a picture in JPEG, PNG or GIF format at the original resolution it had when it was uploaded",
-            "format": "uri",
-            "maxLength": 1000,
-            "default": ""
-        },
-        "resolution_large": {
-            "type": "string",
-            "description": "URL (as per RFC 3986) to a picture in JPEG, PNG or GIF format at the large resolution it had when it was uploaded",
-            "format": "uri",
-            "maxLength": 1000,
-            "default": ""
-        },
-        "resolution_medium": {
-            "type": "string",
-            "description": "URL (as per RFC 3986) to a picture in JPEG, PNG or GIF format at the medium resolution it had when it was uploaded",
-            "format": "uri",
-            "maxLength": 1000,
-            "default": ""
-        },
-        "resolution_small": {
-            "type": "string",
-            "description": "URL (as per RFC 3986) to a picture in JPEG, PNG or GIF format at the small resolution it had when it was uploaded",
-            "format": "uri",
-            "maxLength": 1000,
             "default": ""
         }
     }
