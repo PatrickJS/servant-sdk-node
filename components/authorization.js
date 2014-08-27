@@ -3,7 +3,7 @@
  */
 
 
-module.exports.exchangeAuthCode = function(req, callback) {
+module.exports.exchangeAuthCode = function(ServantDefaults, req, callback) {
 	// Check if User is authorized or not by which params have been received
 	if (typeof req.query.code !== 'undefined') {
 		// User is UNAUTHORIZED, Fetch Refresh Token
@@ -14,7 +14,7 @@ module.exports.exchangeAuthCode = function(req, callback) {
 			'Connection': 'Keep-Alive',
 			'Host': servant_host,
 			'Content-Type': 'application/json',
-			'User-Agent': 'Servant Node SDK ' + this._version
+			'User-Agent': 'Servant Node SDK ' + ServantDefaults._version
 		};
 		// Set Options for Request back to Servant
 		var options = {
@@ -22,7 +22,7 @@ module.exports.exchangeAuthCode = function(req, callback) {
 			headers: headers
 		};
 		options.url = process.env.NODE_ENV === 'servant_development' ? 'http://localhost:4000' : 'http://www.servant.co';
-		options.url = options.url + '/connect/v0/oauth2/token?grant_type=authorization_code&client_id=' + this._client_id + '&client_secret=' + this._client_secret + '&redirect_url=' + this._redirect_url + '&code=' + req.query.code;
+		options.url = options.url + '/connect/v0/oauth2/token?grant_type=authorization_code&client_id=' + ServantDefaults._client_id + '&client_secret=' + ServantDefaults._client_secret + '&redirect_url=' + ServantDefaults._redirect_url + '&code=' + req.query.code;
 		// Make Request to exchange AuthCode for AccessToken & Refresh Token
 		request(options, function(error, response, body) {
 			if (error) return callback(error, null);
@@ -39,7 +39,7 @@ module.exports.exchangeAuthCode = function(req, callback) {
 
 
 
-module.exports.refreshAccessToken = function(refresh_token, callback) {
+module.exports.refreshAccessToken = function(ServantDefaults, refresh_token, callback) {
 	// Check if SDK is being used to test with a local version of Servant
 	var servant_host = process.env.NODE_ENV === 'servant_development' ? 'localhost:4000' : 'www.servant.co';
 	// Set Headers
@@ -47,7 +47,7 @@ module.exports.refreshAccessToken = function(refresh_token, callback) {
 		'Connection': 'Keep-Alive',
 		'Host': servant_host,
 		'Content-Type': 'application/json',
-		'User-Agent': 'Servant Node SDK ' + this._version
+		'User-Agent': 'Servant Node SDK ' + ServantDefaults._version
 	};
 	// Set Options for Request back to Servant
 	var options = {
@@ -55,7 +55,7 @@ module.exports.refreshAccessToken = function(refresh_token, callback) {
 		headers: headers
 	};
 	options.url = process.env.NODE_ENV === 'servant_development' ? 'http://localhost:4000' : 'http://www.servant.co';
-	options.url = options.url + '/connect/v0/oauth2/refresh?grant_type=refresh_token&client_id=' + this._client_id + '&client_secret=' + this._client_secret + '&refresh_token=' + refresh_token;
+	options.url = options.url + '/connect/v0/oauth2/refresh?grant_type=refresh_token&client_id=' + ServantDefaults._client_id + '&client_secret=' + ServantDefaults._client_secret + '&refresh_token=' + refresh_token;
 	// Make Request to exchange AuthCode for AccessToken & Refresh Token
 	request(options, function(error, response, body) {
 		if (error) return callback(error, null);
