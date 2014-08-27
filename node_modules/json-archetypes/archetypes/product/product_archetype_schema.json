@@ -48,13 +48,13 @@
 			"maxLength": 5000,
 			"default": ""
 		},
-		"primary_image": {
+		"primary_image_archetype": {
 			"type": "string",
 			"description": "Image Archetype ID to use as the primary image of this product",
 			"maxLength": 50,
 			"default": ""
 		},
-		"images": {
+		"image_archetypes": {
 			"type": "array",
 			"description": "Array of Image Archetype IDs",
 			"uniqueItems": true,

@@ -229,7 +229,7 @@ _validators = {
     },
     format: function(rules, value) {
         if (!_utilities.formatValidators[rules.format](value))
-            return 'Is not in a valid ' + rules.format + ' format';
+            return 'Not a valid ' + rules.format + ' format';
 
     },
     required: function(requiredArray, object) {
@@ -268,7 +268,7 @@ _validateArray = function(errors, rules, array, property) {
     var idx = keys.length;
     while (idx--) {
         if (_validators[keys[idx]]) {
-            var error = _validators[keys[idx]](rules, array, property);
+            var error = _validators[keys[idx]](rules, array);
             if (error) errors[property] = error;
         }
     };
@@ -294,7 +294,7 @@ _validateArray = function(errors, rules, array, property) {
                         createArrayError(errors, property, prop, i, error[prop]);
                     }
                 } else {
-                    // Iterate Through Properties
+                    // If Required Fields Are Present, Iterate Through Properties
                     var keys2 = Object.keys(item);
                     var idx2 = keys2.length;
                     while (idx2--) {

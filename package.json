@@ -3,9 +3,7 @@
   "version": "0.0.1",
   "description": "Servant SDK for Node.js.  A simple javascript libaray for interacting with the Servant API",
   "main": "index.js",
-  "scripts": {
-    "test": "node ./test/test.js | tap-spec"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git://github.com/servant-cmes/servant-sdk-node.git"
@@ -21,11 +19,7 @@
     "archetypes",
     "servants"
   ],
-  "author": {
-    "name": "Austen Collins",
-    "email": "austen@servant.co",
-    "url": "http://servant.co/"
-  },
+  "author": "Austen Collins <austen@servant.co> (http://servant.co/)",
   "license": "MIT",
   "dependencies": {
     "json-archetypes": "git://github.com/servant-cmes/json-archetypes.git",
@@ -34,16 +28,13 @@
   "bugs": {
     "url": "https://github.com/servant-cmes/servant-sdk-node/issues"
   },
+  "scripts": {
+    "test": "node ./test/test.js | tap-spec"
+  },
   "homepage": "https://github.com/servant-cmes/servant-sdk-node",
   "devDependencies": {
     "async": "0.9.0",
-    "tap-spec": "0.2.0",
+    "tap-spec": "0.2.1",
     "tape": "2.13.3"
-  },
-  "readme": "#Servant SDK for Node.js\n\nA simple library for interacting with the Servant API in your Node.js application.\n\n* Easy Method to allow your users to authorize their Servants to use your app in 3-4 lines of code via the OAuth2 Authorization Code Flow\n* Easy Method to refresh Access Tokens\n* Easy Method to fetch User and their Servants\n\nCheck out the `servant-boilerplate-mean` application to see an example of how to use this SDK",
-  "readmeFilename": "README.md",
-  "_id": "servant-sdk-node@0.0.1",
-  "_shasum": "e5953214df7a6e0891413c1a008297fbf5fe70a7",
-  "_resolved": "git://github.com/servant-cmes/servant-sdk-node.git#b21cec6139d4f1cb831e96413fb244f023ac924f",
-  "_from": "servant-sdk-node@git://github.com/servant-cmes/servant-sdk-node.git"
+  }
 }

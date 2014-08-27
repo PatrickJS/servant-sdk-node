@@ -8,53 +8,76 @@ module.exports.run = function(callback) {
 
 
 	test('****** Test Validations Part 1', function(t) {
-		var instance = Servant.newArchetype('product');
+		var product = Servant.new('product');
 		// Test REQUIRED - Missing Seler & Title
 		// Test MAXIMUM
-		instance.price = 9999999999999999999999999;
+		product.price = 9999999999999999999999999;
 		// Test MINIMUM
-		instance.sale_price = -2;
+		product.sale_price = -2;
 		// Test ENUM
-		instance.condition = 'really old';
+		product.condition = 'really old';
 		// Test MAXLENGTH
-		instance.category = 'asfklasj l;jsalkf jsal;fj saofj als;fj sl;afj lsakjf l;asjf asf asf asf ';
+		product.category = 'asfklasj l;jsalkf jsal;fj saofj als;fj sl;afj lsakjf l;asjf asf asf asf ';
 		// Test PROPERTIES & ADDITIONALPROPERTIES
-		instance.not_allowed = 'asfasf';
+		product.not_allowed = 'asfasf';
 		// Test MAXITEMS
-		instance.tags = ["one", "two", "three", "four", "five", "six", "seven"];
+		product.tags = ["one", "two", "three", "four", "five", "six", "seven"];
 		// Test UNIQUEITEMS
-		instance.audience = ["one", "one"];
+		product.audience = ["one", "one"];
 		// Test TYPE
-		instance.recurring_payment = 'false';
+		product.recurring_payment = 'false';
 		// Test TYPE
-		instance.recurring_payment = 'false';
+		product.recurring_payment = 'false';
 
 		// Run Validation
-		Servant.validateArchetype('product', instance, function(errors, instance) {
-			t.equal(errors !== 'undefined', true);
-			t.equal(errors.title !== 'undefined', true);
-			t.equal(errors.price !== 'undefined', true);
-			t.equal(errors.seller !== 'undefined', true);
-			t.equal(errors.category !== 'undefined', true);
-			t.equal(errors.tags !== 'undefined', true);
-			t.equal(errors.audience !== 'undefined', true);
-			t.equal(errors.recurring_payment !== 'undefined', true);
-			t.equal(errors.sale_price !== 'undefined', true);
+		Servant.validate('product', product, function(errors, product) {
+			t.equal(typeof errors !== 'undefined', true);
+			t.equal(typeof errors.title !== 'undefined', true);
+			t.equal(typeof errors.price !== 'undefined', true);
+			t.equal(typeof errors.seller !== 'undefined', true);
+			t.equal(typeof errors.category !== 'undefined', true);
+			t.equal(typeof errors.tags !== 'undefined', true);
+			t.equal(typeof errors.audience !== 'undefined', true);
+			t.equal(typeof errors.recurring_payment !== 'undefined', true);
+			t.equal(typeof errors.sale_price !== 'undefined', true);
 			t.end();
 			console.log(errors);
 		});
 	});
 
 	test('****** Test Validations Part 2', function(t) {
-		var instance = Servant.newArchetype('receipt');
-		// Test REQUIRED - Missing Seler & Title
-		instance.customer_email = 'john@gm';
-		instance.products = [{
-			product_blah: 'asfasfasf'
-		}]
+		var receipt = Servant.new('receipt');
+		// Test FORMAT DATETIME
+		receipt.transaction_date = 'asfkljasf';
+		// Test FORMAT EMAIL
+		receipt.shipping_email = 'blah'
+		receipt.customer_email = 'john@gmail.com';
+		// Test MINITEMS
+		receipt.products = []
 		// Run Validation
-		Servant.validateArchetype('receipt', instance, function(errors, instance) {
-			t.equal(errors.customer_email !== 'undefined', true);
+		Servant.validate('receipt', receipt, function(errors, receipt) {
+			t.equal(typeof errors.customer_email === 'undefined', true);
+			t.equal(typeof errors.shipping_email !== 'undefined', true);
+			t.equal(typeof errors.products !== 'undefined', true);
+			t.end();
+			console.log(errors);
+		});
+	});
+
+	test('****** Test Validations Part 3', function(t) {
+		var receipt1 = Servant.new('receipt');
+		// Test PROPERTY NOT ALLOWED & INVALID TYPES
+		receipt1.products = [{
+			product_archetype_id: 'asfjasl;jfasf',
+			product_quantity: 'asfasf',
+			product_price: 'asfljk',
+			product_blah: 'asfasfasf'
+		}];
+		// Run Validation
+		Servant.validate('receipt', receipt1, function(errors, receipt1) {
+			t.equal(typeof errors.products_array['0'].product_blah !== 'undefined', true);
+			t.equal(typeof errors.products_array['0'].product_price !== 'undefined', true);
+			t.equal(typeof errors.products_array['0'].product_quantity !== 'undefined', true);
 			t.end();
 			console.log(errors);
 		});
