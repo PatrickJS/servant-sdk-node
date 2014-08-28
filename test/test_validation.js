@@ -36,6 +36,8 @@ module.exports.run = function(callback) {
 		product.not_allowed = 'asfasf';
 		// Test MAXITEMS
 		product.tags = ["one", "two", "three", "four", "five", "six", "seven"];
+		// Test MAXLENGTH in Array
+		product.variations = ['hi', 'alksjfl;ajksfl;kasjfjasfl;jasl;j sal;kjf lk;sajf ;kljlksjfl;ajksfl;kasjfjasfl;jasl;j sal;kjf lk;sajf ;kljlksjfl;ajksfl;kasjfjasfl;jasl;j sal;kjf lk;sajf ;kljlksjfl;ajksfl;kasjfjasfl;jasl;j sal;kjf lk;sajf ;kljlksjfl;ajksfl;kasjfjasfl;jasl;j sal;kjf lk;sajf ;kljlksjfl;ajksfl;kasjfjasfl;jasl;j sal;kjf lk;sajf ;kljlksjfl;ajksfl;kasjfjasfl;jasl;j sal;kjf lk;sajf ;kljlksjfl;ajksfl;kasjfjasfljf lk;sajf ;kljlksjfl;ajksfl;kasjfjasfljf lk;sajf ;kljlksjfl;ajksfl;kasjfjasfljf lk;sajf ;kljlksjfl;ajksfl;kasjfjasfl;jasl;j sal;kjf lk;sajf ;kljsa;l ', 'yo']
 		// Test UNIQUEITEMS
 		product.audience = ["one", "one"];
 		// Test TYPE
@@ -51,6 +53,7 @@ module.exports.run = function(callback) {
 			t.equal(typeof errors.seller !== 'undefined', true);
 			t.equal(typeof errors.category !== 'undefined', true);
 			t.equal(typeof errors.tags !== 'undefined', true);
+			t.equal(typeof errors.variations_array['1'] !== 'undefined', true);
 			t.equal(typeof errors.audience !== 'undefined', true);
 			t.equal(typeof errors.recurring_payment !== 'undefined', true);
 			t.equal(typeof errors.sale_price !== 'undefined', true);

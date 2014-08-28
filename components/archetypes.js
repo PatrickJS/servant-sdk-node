@@ -251,7 +251,7 @@ _validateProperty = function(errors, rules, value, property) {
     while (idx--) {
         if (_validators[keys[idx]]) {
             var error = _validators[keys[idx]](rules, value, property);
-            if (error) errors[property] = error;
+            if (error) return error;
         }
     };
 };
@@ -371,7 +371,8 @@ module.exports.validate = function(ServantDefaults, archetype, instance, callbac
         } else if (archetype.properties[keys1[idx1]] && _utilities.whatIs(instance[keys1[idx1]]) === 'array' && instance[keys1[idx1]].length) {
             _validateArray(errors, archetype.properties[keys1[idx1]], instance[keys1[idx1]], keys1[idx1]);
         } else {
-            _validateProperty(errors, archetype.properties[keys1[idx1]], instance[keys1[idx1]], keys1[idx1]);
+            var error = _validateProperty(errors, archetype.properties[keys1[idx1]], instance[keys1[idx1]], keys1[idx1]);
+            if (error) errors[keys1[idx1]] = error;
         }
     }
 
