@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Validate JSON Archetype Instances
- * 
+ *
  */
 
 
@@ -171,7 +171,6 @@ _utilities.formatValidators = {
 
 
 
-
 /**
  * Validator
  */
@@ -329,7 +328,6 @@ _validateArray = function(errors, rules, array, property) {
 
 
 
-
 /**
  * Validate Instances of Archetypes
  */
@@ -386,7 +384,6 @@ module.exports.validate = function(ServantDefaults, archetype, instance, callbac
 
 
 
-
 /**
  * Instantiate Instances of Archetypes
  */
@@ -398,11 +395,24 @@ module.exports.instantiate = function(archetype) {
 
     var instance = {};
     for (property in JATs.archetypes[archetype].properties) {
-        if (JATs.archetypes[archetype].properties[property].type !== 'array' && JATs.archetypes[archetype].properties[property].type !== 'object')
-            instance[property] = JATs.archetypes[archetype].properties[property].default;
-        else
+
+        // Handle Depending On Type & Format
+        if (JATs.archetypes[archetype].properties[property].type !== 'array' && JATs.archetypes[archetype].properties[property].type !== 'object') {
+
+            // Check Format
+            if (!JATs.archetypes[archetype].properties[property].format) {
+                instance[property] = JATs.archetypes[archetype].properties[property].default;
+            } else if (JATs.archetypes[archetype].properties[property].format === 'date' || JATs.archetypes[archetype].properties[property].format === 'date-time') {
+                // If Date or Date-time Format
+                var d = new Date();
+                instance[property] = d.toISOString();
+            }
+
+        } else {
+            // Handle Arrays & Objects
             instance[property] = JATs.archetypes[archetype].properties[property].default.slice();
-    }
+        }
+    }; // for
     return instance;
 }; // instantiate
 
