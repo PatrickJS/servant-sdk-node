@@ -100,6 +100,32 @@ module.exports.run = function(callback) {
 		});
 	});
 
+	test('****** Test Nested Archetype Errors', function(t) {
+		var product = Servant.new('product');
+		// Add Invalid Nested Archetypes
+		product.primary_image_archetype = {
+			title: 'a great image',
+			large_resolution: 'http://largeimage.com'
+		};
+		// Add Invalid & Duplicate Nested Archetypes
+		product.image_archetypes = [{
+			title: 'a great image',
+			large_resolution: 'http://largeimage.com'
+		}, {
+			title: 'a great image',
+			large_resolution: 'http://largeimage.com'
+		}];
+		// Run Validation
+		Servant.validate('product', product, function(errors, product) {
+			t.equal(typeof errors.image_archetypes_array['0'] !== 'undefined', true);
+			t.equal(typeof errors.image_archetypes_array['1'] !== 'undefined', true);
+			t.equal(typeof errors.image_archetypes !== 'undefined', true);
+			t.equal(typeof errors.primary_image_archetype !== 'undefined', true);
+			t.end();
+			console.log(errors);
+		});
+	});
+
 	// Test Callback
 	callback();
 
