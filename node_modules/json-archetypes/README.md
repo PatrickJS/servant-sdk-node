@@ -60,7 +60,8 @@ Anyone who has a JSON Archetype in mind, or wants to add to existing JSON Archet
 
  - Fork this project.
  - Clone your forked project (which should now be in your github account) to your computer.
- - Create a branch and work on it to create/modify existing JSON Archetypes 
+ - Create a branch and work on it to create/modify existing JSON Archetypes
+ - Try to submit pull requests for one Archetype at a time
 
 More on how to contribute to a Github project [here](https://guides.github.com/activities/contributing-to-open-source/).
 
@@ -68,6 +69,7 @@ More on how to contribute to a Github project [here](https://guides.github.com/a
 
  - **Shallow Architecture -**  Don't add nested objects.  Only Arrays are allowed, and if they contain objects than those objects should be small too.  Shallow architecture makes the Archetypes more accessible using simpler queries that can be effectively indexed to scale well.
  - **Unique Property Names -** Every property name in an Archetype must be unique.
+ - **Follow The JSON Schema Specs** 
 
 
 ##F.A.Q.

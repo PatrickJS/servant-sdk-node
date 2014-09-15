@@ -256,6 +256,12 @@ _validateProperty = function(errors, rules, value, property) {
     };
 };
 
+_validateNestedArchetype = function(errors, rules, value) {
+    if (_utilities.whatIs(value) !== 'object') return 'Invalid type - Nested Archetype must be an object';
+    if (!value._id || typeof value._id === 'undefined') return 'Nested Archetypes must be published on Servant first.  Please publish this nested Archetype on Servant, then include the publshed object'
+    return null;
+};
+
 _validateArray = function(errors, rules, array, property) {
     // Function to create array errors
     var createArrayError = function(errors, arrayproperty, objectproperty, index, err) {
@@ -275,14 +281,15 @@ _validateArray = function(errors, rules, array, property) {
     };
 
     // Iterate Through Array
-    array.forEach(function(item, i) {
+    array.forEach(function(item, i) { // TODO - Get rid of this forEach, it's slow
 
         if (rules.items.$ref) {
             // Check if nested Archetype
             var error = _validateNestedArchetype(errors, rules.items, item);
             if (error) createArrayError(errors, property, null, i, error);
         } else if (rules.items.type && rules.items.type !== 'object') {
-            // If the items are not Objects
+            // If the items is not an object
+            // Check its type
             if (_utilities.whatIs(item) !== rules.items.type) {
                 createArrayError(errors, property, null, i, 'Invalid type');
             } else {
@@ -332,11 +339,6 @@ _validateArray = function(errors, rules, array, property) {
     });
 };
 
-_validateNestedArchetype = function(errors, rules, value) {
-    if (_utilities.whatIs(value) !== 'object') return 'Invalid type - Nested Archetype must be an object';
-    if (!value._id || typeof value._id === 'undefined') return 'Nested Archetypes must be published on Servant first.  Please publish this nested Archetype on Servant, then include the publshed object'
-    return null;
-};
 
 
 /**

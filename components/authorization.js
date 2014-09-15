@@ -16,7 +16,7 @@ module.exports.exchangeAuthCode = function(ServantDefaults, req, callback) {
 	if (typeof req.query.code !== 'undefined') {
 		// User is UNAUTHORIZED, Fetch Refresh Token
 		// Check if SDK is being used to test with a local version of Servant
-		var servant_host = process.env.NODE_ENV === 'servant_development' ? 'localhost:4000' : 'www.servant.co';
+		var servant_host = process.env.NODE_ENV === 'servant_development' ? 'localhost:4001' : 'www.servant.co';
 		// Set Headers
 		var headers = {
 			'Connection': 'Keep-Alive',
@@ -29,8 +29,8 @@ module.exports.exchangeAuthCode = function(ServantDefaults, req, callback) {
 			method: 'GET',
 			headers: headers
 		};
-		options.url = process.env.NODE_ENV === 'servant_development' ? 'http://localhost:4000' : 'http://www.servant.co';
-		options.url = options.url + '/connect/v0/oauth2/token?grant_type=authorization_code&client_id=' + ServantDefaults._client_id + '&client_secret=' + ServantDefaults._client_secret + '&redirect_url=' + ServantDefaults._redirect_url + '&code=' + req.query.code;
+		options.url = process.env.NODE_ENV === 'servant_development' ? 'http://localhost:4001' : 'http://www.servant.co';
+		options.url = options.url + '/connect/v0/oauth2/auth_code?grant_type=authorization_code&client_id=' + ServantDefaults._client_id + '&client_secret=' + ServantDefaults._client_secret + '&redirect_url=' + ServantDefaults._redirect_url + '&code=' + req.query.code;
 		// Make Request to exchange AuthCode for AccessToken & Refresh Token
 		request(options, function(error, response, body) {
 			if (error) return callback(error, null);
@@ -53,7 +53,7 @@ module.exports.exchangeAuthCode = function(ServantDefaults, req, callback) {
 
 module.exports.refreshAccessToken = function(ServantDefaults, refresh_token, callback) {
 	// Check if SDK is being used to test with a local version of Servant
-	var servant_host = process.env.NODE_ENV === 'servant_development' ? 'localhost:4000' : 'www.servant.co';
+	var servant_host = process.env.NODE_ENV === 'servant_development' ? 'localhost:4001' : 'www.servant.co';
 	// Set Headers
 	var headers = {
 		'Connection': 'Keep-Alive',
@@ -66,7 +66,7 @@ module.exports.refreshAccessToken = function(ServantDefaults, refresh_token, cal
 		method: 'GET',
 		headers: headers
 	};
-	options.url = process.env.NODE_ENV === 'servant_development' ? 'http://localhost:4000' : 'http://www.servant.co';
+	options.url = process.env.NODE_ENV === 'servant_development' ? 'http://localhost:4001' : 'http://www.servant.co';
 	options.url = options.url + '/connect/v0/oauth2/refresh?grant_type=refresh_token&client_id=' + ServantDefaults._client_id + '&client_secret=' + ServantDefaults._client_secret + '&refresh_token=' + refresh_token;
 	// Make Request to exchange AuthCode for AccessToken & Refresh Token
 	request(options, function(error, response, body) {

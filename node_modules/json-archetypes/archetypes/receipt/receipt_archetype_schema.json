@@ -34,11 +34,6 @@
 			"description": "ISO 4217 currency code",
 			"default": "USD"
 		},
-		"draft": {
-			"type": "boolean",
-			"description": "Is the Archetype instance in draft mode or published",
-			"default": false
-		},
 		"paid": {
 			"type": "boolean",
 			"description": "Boolean to indicate whether the receipt has been paid for",
