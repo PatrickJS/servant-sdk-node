@@ -30,7 +30,7 @@ module.exports.exchangeAuthCode = function(ServantDefaults, req, callback) {
 			headers: headers
 		};
 		options.url = process.env.NODE_ENV === 'servant_development' ? 'http://localhost:4001' : 'http://www.servant.co';
-		options.url = options.url + '/connect/v0/oauth2/auth_code?grant_type=authorization_code&client_id=' + ServantDefaults._client_id + '&client_secret=' + ServantDefaults._client_secret + '&redirect_url=' + ServantDefaults._redirect_url + '&code=' + req.query.code;
+		options.url = options.url + '/connect/oauth2/exchange_auth_code?grant_type=authorization_code&client_id=' + ServantDefaults._client_id + '&client_secret=' + ServantDefaults._client_secret + '&redirect_url=' + ServantDefaults._redirect_url + '&code=' + req.query.code;
 		// Make Request to exchange AuthCode for AccessToken & Refresh Token
 		request(options, function(error, response, body) {
 			if (error) return callback(error, null);
