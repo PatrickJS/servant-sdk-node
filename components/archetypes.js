@@ -1,7 +1,5 @@
 /**
- *
  * Validate JSON Archetype Instances
- *
  */
 
 
