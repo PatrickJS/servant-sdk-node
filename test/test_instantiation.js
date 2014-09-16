@@ -3,9 +3,8 @@ module.exports.run = function(callback) {
 	/**
 	 * Test Instantiation of Archetype Instances
 	 */
-	var Servant = require('../index')('lkjasfas9f8a', 'asfasfasfasfasf', 'http://servant.co', 0);
+	var Servant = require('../index')('servant', 'servant', 'servant', 0);
 	var test = require('tape');
-
 
 	test('****** Test Product Instantiation', function(t) {
 		var product = Servant.new('product');
