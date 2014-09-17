@@ -417,7 +417,7 @@ module.exports.instantiate = function(archetype) {
     for (property in JATs.archetypes[archetype].properties) {
 
         // Handle Depending On Type & Format
-        if (JATs.archetypes[archetype].properties[property].type !== 'array' && JATs.archetypes[archetype].properties[property].type !== 'object') {
+        if (JATs.archetypes[archetype].properties[property].type !== 'array' && JATs.archetypes[archetype].properties[property].type !== 'object' && JATs.archetypes[archetype].properties[property] !== '_id') {
 
             // Check Format
             if (!JATs.archetypes[archetype].properties[property].format) {
