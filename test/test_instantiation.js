@@ -12,12 +12,6 @@ module.exports.run = function(callback) {
 		t.end();
 	});
 
-	test('****** Test Image Instantiation', function(t) {
-		var image = Servant.new('image');
-		t.equal(image.caption, "");
-		t.end();
-	});
-
 	test('****** Test Receipt Instantiation', function(t) {
 		var receipt = Servant.new('receipt');
 		t.equal(receipt.price_total, 0);
