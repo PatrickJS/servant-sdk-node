@@ -410,8 +410,9 @@ module.exports.validate = function(ServantDefaults, archetype, instance, callbac
 
 module.exports.instantiate = function(archetype) {
     if (typeof archetype !== 'string') throw new Error('The new() method only accept a string for a name parameter');
-    var archetype = archetype.toLowerCase();
+    archetype = archetype.toLowerCase();
     if (!JATs.archetypes[archetype]) throw new Error('JSON Archetype does not exist: ' + archetype);
+    if (archetype === 'image') throw new Error("Image Archetype cannot be instantiated.  To create an Image Archetype, simply upload an image to Servant.");
 
     var instance = {};
     for (property in JATs.archetypes[archetype].properties) {
