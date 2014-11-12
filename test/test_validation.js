@@ -51,7 +51,6 @@ module.exports.run = function(callback) {
 			t.equal(typeof error.errors.seller !== 'undefined', true);
 			t.equal(typeof error.errors.category !== 'undefined', true);
 			t.equal(typeof error.errors.tags !== 'undefined', true);
-			t.equal(typeof error.errors.variations_array['1'] !== 'undefined', true);
 			t.equal(typeof error.errors.audience !== 'undefined', true);
 			t.equal(typeof error.errors.recurring_payment !== 'undefined', true);
 			t.equal(typeof error.errors.sale_price !== 'undefined', true);
@@ -88,9 +87,9 @@ module.exports.run = function(callback) {
 		}];
 		// Run Validation
 		Servant.validate('receipt', receipt1, function(error, receipt1) {
-			t.equal(typeof error.errors.products_array['0'].product_blah !== 'undefined', true);
-			t.equal(typeof error.errors.products_array['0'].product_price !== 'undefined', true);
-			t.equal(typeof error.errors.products_array['0'].product_quantity !== 'undefined', true);
+			t.equal(typeof error.errors.products['0'].product_blah !== 'undefined', true);
+			t.equal(typeof error.errors.products['0'].product_price !== 'undefined', true);
+			t.equal(typeof error.errors.products['0'].product_quantity !== 'undefined', true);
 			t.end();
 		});
 	});
@@ -103,7 +102,7 @@ module.exports.run = function(callback) {
 			large_resolution: 'http://largeimage.com'
 		};
 		// Add Invalid & Duplicate Nested Archetypes
-		product.image_archetypes = [{
+		product.images = [{
 			title: 'a great image',
 			large_resolution: 'http://largeimage.com'
 		}, {
@@ -112,10 +111,9 @@ module.exports.run = function(callback) {
 		}];
 		// Run Validation
 		Servant.validate('product', product, function(error, product) {
-			t.equal(typeof error.errors.image_archetypes_array['0'] !== 'undefined', true);
-			t.equal(typeof error.errors.image_archetypes_array['1'] !== 'undefined', true);
-			t.equal(typeof error.errors.image_archetypes !== 'undefined', true);
-			t.equal(typeof error.errors.primary_image_archetype !== 'undefined', true);
+			t.equal(typeof error.errors.images['0'] !== 'undefined', true);
+			t.equal(typeof error.errors.images['1'] !== 'undefined', true);
+			t.equal(typeof error.errors.images !== 'undefined', true);
 			t.end();
 		});
 	});
