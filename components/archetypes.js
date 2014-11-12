@@ -255,8 +255,11 @@ _validateProperty = function(errors, rules, value, property) {
 };
 
 _validateNestedArchetype = function(errors, rules, value) {
-    if (_utilities.whatIs(value) !== 'object') return 'Invalid type - Nested Archetype must be an object';
-    if (!value._id || typeof value._id === 'undefined') return 'Nested Archetypes must be published on Servant first.  Please publish this nested Archetype on Servant, then include the publshed object'
+    if (_utilities.whatIs(value) === 'object') {
+        if (!value._id || typeof value._id === 'undefined') return 'Nested Archetypes must be published on Servant first.  Please publish this nested Archetype on Servant, then include the publshed object';
+    } else if (_utilities.whatIs(value) !== 'string') {
+        return 'Nested Archetypes must either be an ID string or an object that has already been published on Servant and has an "_id" property.';
+    }
     return null;
 };
 
