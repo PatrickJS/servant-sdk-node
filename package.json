@@ -1,12 +1,12 @@
 {
   "name": "servant-sdk-node",
   "version": "0.0.1",
-  "description": "Servant SDK for Node.js.  A simple javascript libaray for interacting with the Servant API",
+  "description": "Servant SDK for Node.js.  A simple javascript library for interacting with the Servant API",
   "main": "index.js",
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git://github.com/servant-cmes/servant-sdk-node.git"
+    "url": "git://github.com/servant-app/servant-sdk-node.git"
   },
   "keywords": [
     "servant",
@@ -22,16 +22,16 @@
   "author": "Austen Collins <austen@servant.co> (http://servant.co/)",
   "license": "MIT",
   "dependencies": {
-    "json-archetypes": "git://github.com/servant-cmes/json-archetypes.git",
+    "json-archetypes": "git://github.com/servant-app/json-archetypes.git",
     "request": "2.40.0"
   },
   "bugs": {
-    "url": "https://github.com/servant-cmes/servant-sdk-node/issues"
+    "url": "https://github.com/servant-app/servant-sdk-node/issues"
   },
   "scripts": {
     "test": "node ./test/test.js | tap-spec"
   },
-  "homepage": "https://github.com/servant-cmes/servant-sdk-node",
+  "homepage": "https://github.com/servant-app/servant-sdk-node",
   "devDependencies": {
     "async": "0.9.0",
     "tap-spec": "0.2.1",
