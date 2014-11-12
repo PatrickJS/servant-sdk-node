@@ -1,6 +1,7 @@
 /**
  *  Servant SDK for Node.js - https://github.com/servant-cmes/servant-sdk-node
- *  Servant - http://servant.co
+ *  Servant - https://www.servant.co
+ *  Documentation – https://developers.servant.co/documentation
  *  By Austen Collins
  */
 

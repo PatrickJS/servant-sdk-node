@@ -8,7 +8,7 @@ module.exports.run = function(callback) {
 
 	test('****** Test Product Instantiation', function(t) {
 		var product = Servant.new('product');
-		t.equal(product.title, "");
+		t.equal(product.name, "");
 		t.end();
 	});
 

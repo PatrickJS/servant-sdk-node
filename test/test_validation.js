@@ -14,7 +14,6 @@ module.exports.run = function(callback) {
 		Servant.validate('receipt', ['yada', 'aslfjaslf'], function(errors, receipt1) {
 			t.equal(typeof errors !== 'undefined', true);
 			t.equal(typeof errors.schema !== 'undefined', true);
-			console.log(errors);
 			t.end();
 		});
 	});
@@ -45,19 +44,18 @@ module.exports.run = function(callback) {
 		product.recurring_payment = 'false';
 
 		// Run Validation
-		Servant.validate('product', product, function(errors, product) {
-			t.equal(typeof errors !== 'undefined', true);
-			t.equal(typeof errors.title !== 'undefined', true);
-			t.equal(typeof errors.price !== 'undefined', true);
-			t.equal(typeof errors.seller !== 'undefined', true);
-			t.equal(typeof errors.category !== 'undefined', true);
-			t.equal(typeof errors.tags !== 'undefined', true);
-			t.equal(typeof errors.variations_array['1'] !== 'undefined', true);
-			t.equal(typeof errors.audience !== 'undefined', true);
-			t.equal(typeof errors.recurring_payment !== 'undefined', true);
-			t.equal(typeof errors.sale_price !== 'undefined', true);
+		Servant.validate('product', product, function(error, product) {
+			t.equal(typeof error.errors !== 'undefined', true);
+			t.equal(typeof error.errors.name !== 'undefined', true);
+			t.equal(typeof error.errors.price !== 'undefined', true);
+			t.equal(typeof error.errors.seller !== 'undefined', true);
+			t.equal(typeof error.errors.category !== 'undefined', true);
+			t.equal(typeof error.errors.tags !== 'undefined', true);
+			t.equal(typeof error.errors.variations_array['1'] !== 'undefined', true);
+			t.equal(typeof error.errors.audience !== 'undefined', true);
+			t.equal(typeof error.errors.recurring_payment !== 'undefined', true);
+			t.equal(typeof error.errors.sale_price !== 'undefined', true);
 			t.end();
-			console.log(errors);
 		});
 	});
 
@@ -71,12 +69,11 @@ module.exports.run = function(callback) {
 		// Test MINITEMS
 		receipt.products = []
 		// Run Validation
-		Servant.validate('receipt', receipt, function(errors, receipt) {
-			t.equal(typeof errors.customer_email === 'undefined', true);
-			t.equal(typeof errors.shipping_email !== 'undefined', true);
-			t.equal(typeof errors.products !== 'undefined', true);
+		Servant.validate('receipt', receipt, function(error, receipt) {
+			t.equal(typeof error.errors.customer_email === 'undefined', true);
+			t.equal(typeof error.errors.shipping_email !== 'undefined', true);
+			t.equal(typeof error.errors.products !== 'undefined', true);
 			t.end();
-			console.log(errors);
 		});
 	});
 
@@ -90,12 +87,11 @@ module.exports.run = function(callback) {
 			product_blah: 'asfasfasf'
 		}];
 		// Run Validation
-		Servant.validate('receipt', receipt1, function(errors, receipt1) {
-			t.equal(typeof errors.products_array['0'].product_blah !== 'undefined', true);
-			t.equal(typeof errors.products_array['0'].product_price !== 'undefined', true);
-			t.equal(typeof errors.products_array['0'].product_quantity !== 'undefined', true);
+		Servant.validate('receipt', receipt1, function(error, receipt1) {
+			t.equal(typeof error.errors.products_array['0'].product_blah !== 'undefined', true);
+			t.equal(typeof error.errors.products_array['0'].product_price !== 'undefined', true);
+			t.equal(typeof error.errors.products_array['0'].product_quantity !== 'undefined', true);
 			t.end();
-			console.log(errors);
 		});
 	});
 
@@ -115,13 +111,12 @@ module.exports.run = function(callback) {
 			large_resolution: 'http://largeimage.com'
 		}];
 		// Run Validation
-		Servant.validate('product', product, function(errors, product) {
-			t.equal(typeof errors.image_archetypes_array['0'] !== 'undefined', true);
-			t.equal(typeof errors.image_archetypes_array['1'] !== 'undefined', true);
-			t.equal(typeof errors.image_archetypes !== 'undefined', true);
-			t.equal(typeof errors.primary_image_archetype !== 'undefined', true);
+		Servant.validate('product', product, function(error, product) {
+			t.equal(typeof error.errors.image_archetypes_array['0'] !== 'undefined', true);
+			t.equal(typeof error.errors.image_archetypes_array['1'] !== 'undefined', true);
+			t.equal(typeof error.errors.image_archetypes !== 'undefined', true);
+			t.equal(typeof error.errors.primary_image_archetype !== 'undefined', true);
 			t.end();
-			console.log(errors);
 		});
 	});
 

@@ -362,11 +362,13 @@ module.exports.validate = function(ServantDefaults, archetype, instance, callbac
         return callback(errors, null);
     }
 
-    // Check Required Fields.  JSON Archetypes always have required fields
-    var required = _validators.required(archetype.required, instance);
-    if (required) {
-        for (prop in required) {
-            errors[prop] = required[prop];
+    // Check Required Fields, if they exist
+    if (archetype.required && archetype.required.length) {
+        var required = _validators.required(archetype.required, instance);
+        if (required) {
+            for (prop in required) {
+                errors[prop] = required[prop];
+            }
         }
     }
 
@@ -396,7 +398,10 @@ module.exports.validate = function(ServantDefaults, archetype, instance, callbac
     }
 
     // Callback Errors
-    if (Object.keys(errors).length) return callback(errors, null);
+    if (Object.keys(errors).length) return callback({
+        error: "Validation Failed",
+        errors: errors
+    }, null);
     // Callback Valid
     return callback(null, instance);
 
@@ -434,6 +439,11 @@ module.exports.instantiate = function(archetype) {
             instance[property] = JATs.archetypes[archetype].properties[property].default.slice();
         }
     }; // for
+
+    // Remove _id attribute since it is new
+    delete instance._id;
+
+    // Return Instance
     return instance;
 }; // instantiate
 
