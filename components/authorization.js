@@ -16,7 +16,7 @@ module.exports.exchangeAuthCode = function(ServantDefaults, authorization_code, 
         // Set Headers
         var headers = {
             'Connection': 'Keep-Alive',
-            'Host': 'https://www.servant.co',
+            'Host': 'www.servant.co',
             'Content-Type': 'application/json',
             'User-Agent': 'Servant Node SDK ' + ServantDefaults._version
         };
@@ -46,7 +46,7 @@ module.exports.refreshAccessToken = function(ServantDefaults, refresh_token, cal
     // Set Headers
     var headers = {
         'Connection': 'Keep-Alive',
-        'Host': 'https://www.servant.co',
+        'Host': 'www.servant.co',
         'Content-Type': 'application/json',
         'User-Agent': 'Servant Node SDK ' + ServantDefaults._version
     };
