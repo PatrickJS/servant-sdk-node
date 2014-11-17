@@ -45,8 +45,8 @@ var Servant = function(client_id, client_secret, redirect_url, api_version) {
 
 var authorization = require('./components/authorization.js'); 
 
-Servant.prototype.exchangeAuthCode = function(req, callback) {
-	return authorization.exchangeAuthCode(ServantDefaults, req, callback);
+Servant.prototype.exchangeAuthCode = function(authorization_code, callback) {
+	return authorization.exchangeAuthCode(ServantDefaults, authorization_code, callback);
 };
 
 Servant.prototype.refreshAccessToken = function(refresh_token, callback) {
