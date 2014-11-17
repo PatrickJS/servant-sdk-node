@@ -12,6 +12,24 @@
 			"maxLength": 50,
 			"default": ""
 		},
+		"key": {
+            "type": "string",
+            "description": "Image file name without file extension (e.g., .png)",
+            "maxLength": 50,
+            "default": ""
+        },
+        "format": {
+			"type": "string",
+			"description": "Image file type ('jpg','png','gif')",
+			"enum": ["jpg", "jpeg", "png", "gif"]
+		},
+		"bytes": {
+			"type": "integer",
+			"description": "Image size in bytes",
+			"minimum": 0,
+			"maximum": 999999999999999999999999999,
+			"default": 0
+		},
 		"resolution_original": {
 			"type": "string",
 			"description": "URL (as per RFC 3986) to a picture in JPEG, PNG or GIF format at the original resolution it had when it was uploaded",
@@ -46,18 +64,6 @@
 			"format": "uri",
 			"maxLength": 1000,
 			"default": ""
-		},
-		"bytes": {
-			"type": "integer",
-			"description": "Image size in bytes",
-			"minimum": 0,
-			"maximum": 999999999999999999999999999,
-			"default": 0
-		},
-		"format": {
-			"type": "string",
-			"description": "Image file type ('jpg','png','gif')",
-			"enum": ["jpg", "jpeg", "png", "gif"]
 		},
 		"created": {
 			"type": "string",

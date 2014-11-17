@@ -7,18 +7,6 @@ module.exports.run = function(callback) {
 	var test = require('tape');
 
 
-	test('****** Test Validations Part 1', function(t) {
-		// Test validating a NON-OBJECT
-
-		// Run Validation
-		Servant.validate('receipt', ['yada', 'aslfjaslf'], function(errors, receipt1) {
-			t.equal(typeof errors !== 'undefined', true);
-			t.equal(typeof errors.schema !== 'undefined', true);
-			t.end();
-		});
-	});
-
-
 	test('****** Test Validations Part 2', function(t) {
 		var product = Servant.new('product');
 		// Test REQUIRED - Missing Seler & Title
@@ -58,38 +46,17 @@ module.exports.run = function(callback) {
 		});
 	});
 
-	test('****** Test Validations Part 3', function(t) {
-		var receipt = Servant.new('receipt');
-		// Test FORMAT DATETIME
-		receipt.transaction_date = 'asfkljasf';
-		// Test FORMAT EMAIL
-		receipt.shipping_email = 'blah'
-		receipt.customer_email = 'john@gmail.com';
-		// Test MINITEMS
-		receipt.products = []
-		// Run Validation
-		Servant.validate('receipt', receipt, function(error, receipt) {
-			t.equal(typeof error.errors.customer_email === 'undefined', true);
-			t.equal(typeof error.errors.shipping_email !== 'undefined', true);
-			t.equal(typeof error.errors.products !== 'undefined', true);
-			t.end();
-		});
-	});
-
-	test('****** Test Validations Part 4', function(t) {
-		var receipt1 = Servant.new('receipt');
+	test('****** Test Validations – Person', function(t) {
+		var person = Servant.new('person');
 		// Test PROPERTY NOT ALLOWED & INVALID TYPES
-		receipt1.products = [{
-			product_archetype_id: 'asfjasl;jfasf',
-			product_quantity: 'asfasf',
-			product_price: 'asfljk',
-			product_blah: 'asfasfasf'
-		}];
+		person = {
+			name: "Jack Smith",
+			phone_numbers: [{ phone_number: 801284127414, invalid_property: 'whoo!' }],
+			_id: 'yes!'
+		}
 		// Run Validation
-		Servant.validate('receipt', receipt1, function(error, receipt1) {
-			t.equal(typeof error.errors.products['0'].product_blah !== 'undefined', true);
-			t.equal(typeof error.errors.products['0'].product_price !== 'undefined', true);
-			t.equal(typeof error.errors.products['0'].product_quantity !== 'undefined', true);
+		Servant.validate('person', person, function(error, personvalidated) {
+			console.log(error, error.errors.phone_numbers, personvalidated)
 			t.end();
 		});
 	});

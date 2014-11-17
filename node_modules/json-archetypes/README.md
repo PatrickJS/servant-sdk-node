@@ -34,7 +34,7 @@ Anyone who has a JSON Archetype in mind, or wants to add to existing JSON Archet
 
 More on how to contribute to a Github project [here](https://guides.github.com/activities/contributing-to-open-source/).
 
-##Architecture Principles
+##Design Principles
 
  - **Shallow Architecture -**  Don't add nested objects.  Only Arrays are allowed, and if they contain objects, keep those objects small.  Shallow architecture makes the Archetypes more accessible using simpler queries that can be effectively indexed to scale well.
  - **Unique Property Names -** Every property name in an Archetype must be unique.

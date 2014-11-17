@@ -233,6 +233,7 @@ _validators = {
     },
     required: function(requiredArray, object) {
         var errors = {};
+        if (!requiredArray.length) return;
         for (var i = 0, len = requiredArray.length; i < len; i++) {
             if (!object[requiredArray[i]] || object[requiredArray[i]] === '') {
                 errors[requiredArray[i]] = requiredArray[i] + ' is required';
@@ -281,7 +282,7 @@ _validateArray = function(errors, rules, array, property) {
         }
     };
 
-    // Iterate Through Array
+    // Iterate Through Array Items
     array.forEach(function(item, i) { // TODO - Get rid of this forEach, it's slow
 
         if (rules.items.$ref) {
@@ -289,8 +290,7 @@ _validateArray = function(errors, rules, array, property) {
             var error = _validateNestedArchetype(errors, rules.items, item);
             if (error) createArrayError(errors, property, null, i, error);
         } else if (rules.items.type && rules.items.type !== 'object') {
-            // If the items is not an object
-            // Check its type
+            // If the items is not an object, check its type
             if (_utilities.whatIs(item) !== rules.items.type) {
                 createArrayError(errors, property, null, i, 'Invalid type');
             } else {
@@ -302,11 +302,15 @@ _validateArray = function(errors, rules, array, property) {
             if (_utilities.whatIs(item) !== 'object') {
                 createArrayError(errors, property, null, i, 'Invalid type.  Must be an object');
             } else {
-                // Check Required Fields
-                var error = _validators.required(rules.items.required, item);
+                // Check Required Fields, If Required Fields Are Specified
+                if (rules.items.required) {
+                    var error = _validators.required(rules.items.required, item);
+                } else {
+                    var error = null;
+                }
                 if (error) {
                     for (prop in error) {
-                        createArrayError(errors, property, prop, i, error[prop]);
+                        return createArrayError(errors, property, prop, i, error[prop]);
                     }
                 } else {
                     // If Required Fields Are Present, Iterate Through Properties
