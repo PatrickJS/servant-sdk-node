@@ -3,7 +3,8 @@ module.exports.run = function(callback) {
 	/**
 	 * Test Instantiation of Archetype Instances
 	 */
-	var Servant = require('../index')('servant', 'servant', 'servant', 0);
+	Servant = require('../index')('servant', 'servant', 'servant', 0);
+
 	var test = require('tape');
 
 	test('****** Test TinyText Instantiation', function(t) {

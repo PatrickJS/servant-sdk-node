@@ -5,94 +5,78 @@
  *  By Austen Collins
  */
 
-
-/**
- * Options Object to share data
- */
-
-var ServantDefaults = {};
-
+var authorization = require('./components/authorization.js');
+var api_methods = require('./components/api_methods.js');
+var archetypes = require('./components/archetypes.js');
 
 
 /**
- * SERVANT CONSTRUCTOR ----------
+ * Servant Constructor
  */
 
-var Servant = function(client_id, client_secret, redirect_url, api_version) {
+function Servant(client_id, client_secret, api_version) {
 
-	// Check for required parameters
-	if (!client_id || !client_secret || !redirect_url) {
-		throw new Error("Servant SDK Error – Please include all of the required parameters: client_id, client_secret, redirect_url, api_version.  Here is what you entered in order: ", client_id, client_secret, redirect_url, api_version);
-	}
+    // Check for required parameters
+    if (!client_id || !client_secret) {
+        throw new Error("Servant SDK Error – Please include all of the required parameters: client_id, client_secret");
+    }
 
-	// Add In Options
-	ServantDefaults._redirect_url = redirect_url;
-	ServantDefaults._client_id = client_id;
-	ServantDefaults._client_secret = client_secret;
-	ServantDefaults._api_version = api_version || 0;
-	ServantDefaults._sdk_version = '0.0.1';
-
-	// Warn if using with a local copy of Servant
-	if (process.env.NODE_ENV === 'servant_development') console.log(" ****** You Are Using Boilerplate With A Local Copy Of Servant ****** ")
+    // Defaults
+    this._client_id = client_id;
+    this._client_secret = client_secret;
+    this._api_version = api_version || 0;
+    this._sdk_version = '0.0.1';
 
 }; // Instantiate Servant Constructor
 
 
 
 /**
- * AUTHORIZATION METHODS ----------
+ * Methods: Authorization
  */
 
-var authorization = require('./components/authorization.js'); 
-
 Servant.prototype.exchangeAuthCode = function(authorization_code, callback) {
-	return authorization.exchangeAuthCode(ServantDefaults, authorization_code, callback);
+    return authorization.exchangeAuthCode(this, authorization_code, callback);
 };
 
 Servant.prototype.refreshAccessToken = function(refresh_token, callback) {
-	return authorization.refreshAccessToken(ServantDefaults, refresh_token, callback);
+    return authorization.refreshAccessToken(this, refresh_token, callback);
 };
 
 
 
 /**
- * API METHODS ----------
+ * Methods: API
  */
 
-var api_methods = require('./components/api_methods.js'); 
-
-Servant.prototype.getUser = function(params, callback) {
-	return api_methods.getUser(params, callback);
+Servant.prototype.getServants = function(params, callback) {
+    return api_methods.getServants(params, callback);
 };
 
 
 
 /**
- * ARCHETYPE METHODS ----------
+ * Methods: Archetypes
  */
-
-var archetypes = require('./components/archetypes.js'); 
 
 Servant.prototype.archetypes = require('json-archetypes').archetypes;
 
 Servant.prototype.new = function(archetype) {
-	return archetypes.instantiate(archetype);
+    return archetypes.instantiate(archetype);
 };
 
 Servant.prototype.validate = function(archetype, instance, callback) {
-	return archetypes.validate(ServantDefaults, archetype, instance, callback);
+    return archetypes.validate(this, archetype, instance, callback);
 };
 
 
 
 /**
- * EXPORT SDK ----------
+ * Export the SDK
  */
-
 module.exports = function(client_id, client_secret, redirect_uri, api_version) {
-	return new Servant(client_id, client_secret, redirect_uri, api_version);
+    return new Servant(client_id, client_secret, redirect_uri, api_version);
 };
-
 
 
 
