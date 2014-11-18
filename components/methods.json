@@ -4,7 +4,7 @@
    "type": "ApiMethod",
    "results": [{
       "defaults": null,
-      "name": "getUser",
+      "name": "getServants",
       "description": "Get the Servant account owner's user data",
       "uri": "/data/:access_token/user",
       "params": {
