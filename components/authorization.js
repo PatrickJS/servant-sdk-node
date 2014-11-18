@@ -25,7 +25,7 @@ module.exports.exchangeAuthCode = function(ServantDefaults, authorization_code, 
             method: 'GET',
             headers: headers
         };
-        options.url = 'https://www.servant.co/connect/oauth2/exchange_auth_code?grant_type=authorization_code&client_id=' + ServantDefaults._client_id + '&client_secret=' + ServantDefaults._client_secret + '&redirect_url=' + ServantDefaults._redirect_url + '&authorization_code=' + authorization_code;
+        options.url = 'https://api0.servant.co/connect/oauth2/exchange_auth_code?grant_type=authorization_code&client_id=' + ServantDefaults._client_id + '&client_secret=' + ServantDefaults._client_secret + '&redirect_url=' + ServantDefaults._redirect_url + '&authorization_code=' + authorization_code;
         // Make Request to exchange AuthCode for AccessToken & Refresh Token
         request(options, function(error, response, body) {
             if (error) return callback(error, null);
@@ -55,7 +55,7 @@ module.exports.refreshAccessToken = function(ServantDefaults, refresh_token, cal
         method: 'GET',
         headers: headers
     };
-    options.url = 'https://www.servant.co/connect/v0/oauth2/refresh?grant_type=refresh_token&client_id=' + ServantDefaults._client_id + '&client_secret=' + ServantDefaults._client_secret + '&refresh_token=' + refresh_token;
+    options.url = 'https://api0.servant.co/connect/oauth2/refresh?grant_type=refresh_token&client_id=' + ServantDefaults._client_id + '&client_secret=' + ServantDefaults._client_secret + '&refresh_token=' + refresh_token;
     // Make Request to exchange AuthCode for AccessToken & Refresh Token
     request(options, function(error, response, body) {
         if (error) return callback(error, null);
