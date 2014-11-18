@@ -18,7 +18,7 @@ module.exports.exchangeAuthCode = function(ServantDefaults, authorization_code, 
             'Connection': 'Keep-Alive',
             'Host': 'www.servant.co',
             'Content-Type': 'application/json',
-            'User-Agent': 'Servant Node SDK ' + ServantDefaults._version
+            'User-Agent': 'Servant Node SDK ' + ServantDefaults._sdk_version
         };
         // Set Options for Request back to Servant
         var options = {
@@ -48,7 +48,7 @@ module.exports.refreshAccessToken = function(ServantDefaults, refresh_token, cal
         'Connection': 'Keep-Alive',
         'Host': 'www.servant.co',
         'Content-Type': 'application/json',
-        'User-Agent': 'Servant Node SDK ' + ServantDefaults._version
+        'User-Agent': 'Servant Node SDK ' + ServantDefaults._sdk_version
     };
     // Set Options for Request back to Servant
     var options = {

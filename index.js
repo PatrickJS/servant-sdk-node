@@ -21,7 +21,7 @@ var ServantDefaults = {};
 var Servant = function(client_id, client_secret, redirect_url, api_version) {
 
 	// Check for required parameters
-	if (!client_id || !client_secret || !redirect_url || typeof api_version === 'undefined') {
+	if (!client_id || !client_secret || !redirect_url) {
 		throw new Error("Servant SDK Error – Please include all of the required parameters: client_id, client_secret, redirect_url, api_version.  Here is what you entered in order: ", client_id, client_secret, redirect_url, api_version);
 	}
 
@@ -29,8 +29,8 @@ var Servant = function(client_id, client_secret, redirect_url, api_version) {
 	ServantDefaults._redirect_url = redirect_url;
 	ServantDefaults._client_id = client_id;
 	ServantDefaults._client_secret = client_secret;
-	ServantDefaults._api_version = api_version;
-	ServantDefaults._version = '0.0.1';
+	ServantDefaults._api_version = api_version || 0;
+	ServantDefaults._sdk_version = '0.0.1';
 
 	// Warn if using with a local copy of Servant
 	if (process.env.NODE_ENV === 'servant_development') console.log(" ****** You Are Using Boilerplate With A Local Copy Of Servant ****** ")

@@ -56,7 +56,6 @@ module.exports.run = function(callback) {
 		}
 		// Run Validation
 		Servant.validate('person', person, function(error, personvalidated) {
-			console.log(error, error.errors.phone_numbers, personvalidated)
 			t.end();
 		});
 	});
