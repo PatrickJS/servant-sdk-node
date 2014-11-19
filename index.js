@@ -69,6 +69,19 @@ function Servant(client_id, client_secret, protocol, api_version) {
 }; // Instantiate Servant Constructor
 
 
+/**
+ * Methods: Archetypes
+ */
+
+Servant.prototype.archetypes = require('json-archetypes').archetypes;
+
+Servant.prototype.new = function(archetype) {
+    return archetypes.instantiate(archetype);
+};
+
+Servant.prototype.validate = function(archetype, instance, callback) {
+    return archetypes.validate(this, archetype, instance, callback);
+};
 
 /**
  * Methods: Authorization
@@ -81,8 +94,6 @@ Servant.prototype.exchangeAuthCode = function(authorization_code, callback) {
 Servant.prototype.refreshAccessToken = function(refresh_token, callback) {
     return authorization.refreshAccessToken(this, refresh_token, callback);
 };
-
-
 
 /**
  * Methods: API
@@ -103,24 +114,6 @@ Servant.prototype.getUserAndServants = function(access_token, callback) {
         } // callback
     );
 };
-
-
-
-/**
- * Methods: Archetypes
- */
-
-Servant.prototype.archetypes = require('json-archetypes').archetypes;
-
-Servant.prototype.new = function(archetype) {
-    return archetypes.instantiate(archetype);
-};
-
-Servant.prototype.validate = function(archetype, instance, callback) {
-    return archetypes.validate(this, archetype, instance, callback);
-};
-
-
 
 /**
  * Export the SDK
