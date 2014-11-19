@@ -120,8 +120,7 @@ var _callAPI = function(http_method, uri, param_types, params, access_token, cal
 	var options = {
 		method: http_method
 	};
-	options.url = 'api0';
-	options.url = process.env.NODE_ENV === 'servant_development' ? 'http://' + options.url + '.localhost:4000' : 'http://' + options.url + '.servant.co';
+	options.url = 'http://api0.servant.co';
 	options.url = options.url + request_url;
 
 	request(options, function(error, response, body) {
