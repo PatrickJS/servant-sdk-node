@@ -44,14 +44,14 @@ function Servant(client_id, client_secret, protocol, api_version) {
         }
         // Set URL, AccessToken, Query Params
         if (!access_token) throw new Error("Servant SDK Error – Please include an access_token");
-        options.url = url + '?access_token=' + access_token;
+        options.url = this._path + url + '?access_token=' + access_token;
         if (query_string) options.url = options.url + query_string;
         // Set Timeout
         if (!timeout) options.timeout = 4000;
         // Set Method, Body
         options.method = method;
+        options.json = true;
         if (options.method === 'POST' || options.method === 'PUT') {
-            options.json = true;
             if (typeof body !== 'string') {
                 options.body = JSON.stringify(body);
             } else {
