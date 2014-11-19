@@ -14,7 +14,7 @@ var archetypes = require('./components/archetypes.js');
  * Servant Constructor
  */
 
-function Servant(client_id, client_secret, api_version) {
+function Servant(client_id, client_secret, protocol, api_version) {
 
     // Check for required parameters
     if (!client_id || !client_secret) {
@@ -26,6 +26,7 @@ function Servant(client_id, client_secret, api_version) {
     this._client_secret = client_secret;
     this._api_version = api_version || 0;
     this._sdk_version = '0.0.1';
+    this._protocol = protocol || 'http';
 
 }; // Instantiate Servant Constructor
 
