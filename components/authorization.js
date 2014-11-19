@@ -29,13 +29,15 @@ module.exports.exchangeAuthCode = function(ServantDefaults, authorization_code, 
             client_secret: ServantDefaults._client_secret
         });
 
+
         // Make Request to exchange AuthCode for AccessToken & Refresh Token
         request({
             headers: headers,
             method: 'POST',
             uri: ServantDefaults._protocol + '://api0.servant.co/connect/oauth2/exchange_auth_code',
             body: data,
-            json: true
+            json: true,
+            timeout: 4000
         }, function(error, response, body) {
             if (error) return callback(error, null);
             if (response.statusCode !== 200) return callback(body, null);
@@ -75,12 +77,14 @@ module.exports.refreshAccessToken = function(ServantDefaults, refresh_token, cal
         method: 'POST',
         uri: ServantDefaults._protocol + '://api0.servant.co/connect/oauth2/refresh_access_token',
         body: data,
-        json: true
+        json: true,
+        timeout: 4000
     }, function(error, response, body) {
         if (error) return callback(error, null);
         if (response.statusCode !== 200) return callback(body, null);
         if (response.statusCode == 200) return callback(null, body);
     });
+
 }; // refreshAccessToken 
 
 
