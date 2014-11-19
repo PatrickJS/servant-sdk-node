@@ -39,7 +39,7 @@ module.exports.exchangeAuthCode = function(ServantDefaults, authorization_code, 
         }, function(error, response, body) {
             if (error) return callback(error, null);
             if (response.statusCode !== 200) return callback(JSON.parse(body), null);
-            if (response.statusCode == 200) return callback(null, JSON.parse(body));
+            if (response.statusCode === 200) return callback(null, JSON.parse(body));
         });
     } else {
         throw new Error('Something has gone wrong with the authorization process.  Make sure the Connect URL is correct and it contains a response_type=code parameter.');
@@ -76,7 +76,7 @@ module.exports.refreshAccessToken = function(ServantDefaults, refresh_token, cal
         headers: headers
     };
     options.url = 'https://api0.servant.co/connect/oauth2/refresh_access_token?';
-    
+
     // Make Request to exchange AuthCode for AccessToken & Refresh Token
     request(options, function(error, response, body) {
         if (error) return callback(error, null);
