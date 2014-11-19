@@ -5,6 +5,8 @@
  *  By Austen Collins
  */
 
+var request = require('request');
+
 var authorization = require('./components/authorization.js');
 var archetypes = require('./components/archetypes.js');
 
