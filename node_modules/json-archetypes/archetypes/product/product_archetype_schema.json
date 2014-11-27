@@ -7,11 +7,28 @@
 	"required": ["name", "price", "seller"],
 	"properties": {
 		"_id": {
-			"type": "string",
-			"description": "Unique identifier for this product",
-			"maxLength": 50,
-			"default": ""
-		},
+            "type": "string",
+            "description": "Unique identifier for this archetype record",
+            "maxLength": 50,
+            "default": ""
+        },
+        "draft": {
+            "type": "boolean",
+            "description": "Indicates this archetype record is a draft and is not published",
+            "default": false
+        },
+        "created": {
+            "type": "string",
+            "description": "Date and time this archetype record was created in ISO 8601 date standard e.g. YYYY-MM-DDThh:mm:ss.sTZD",
+            "format": "date-time",
+            "default": ""
+        },
+        "updated": {
+            "type": "string",
+            "description": "Date and time this archetype record was updated in ISO 8601 date standard e.g. YYYY-MM-DDThh:mm:ss.sTZD",
+            "format": "date-time",
+            "default": ""
+        },
 		"name": {
 			"type": "string",
 			"description": "The name of the product",
@@ -152,18 +169,6 @@
 			"type": "string",
 			"description": "The Universal Product Code of the product",
 			"maxLength": 50,
-			"default": ""
-		},
-		"created": {
-			"type": "string",
-			"description": "Date and time the product was created in ISO 8601 date standard e.g. YYYY-MM-DDThh:mm:ss.sTZD",
-			"format": "date-time",
-			"default": ""
-		},
-		"updated": {
-			"type": "string",
-			"description": "Date and time the product was updated in ISO 8601 date standard e.g. YYYY-MM-DDThh:mm:ss.sTZD",
-			"format": "date-time",
 			"default": ""
 		}
 	}

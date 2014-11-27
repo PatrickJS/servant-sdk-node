@@ -1,5 +1,5 @@
 /**
- *  Servant SDK for Node.js - https://github.com/servant-cmes/servant-sdk-node
+ *  Servant SDK for Node.js v0.0.2 - https://github.com/servant-cmes/servant-sdk-node
  *  Servant - https://www.servant.co
  *  Documentation – https://developers.servant.co/documentation
  *  By Austen Collins
@@ -25,7 +25,7 @@ function Servant(client_id, client_secret, protocol, api_version) {
     this._client_id = client_id;
     this._client_secret = client_secret;
     this._api_version = api_version || 0;
-    this._sdk_version = '0.0.1';
+    this._sdk_version = '0.0.2';
     this._protocol = protocol || 'http';
     this._path = this._protocol + '://api0.servant.co';
 
