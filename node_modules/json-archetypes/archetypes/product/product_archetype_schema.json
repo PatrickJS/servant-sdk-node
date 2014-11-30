@@ -32,7 +32,7 @@
 		"name": {
 			"type": "string",
 			"description": "The name of the product",
-			"maxLength": 140,
+			"maxLength": 130,
 			"default": ""
 		},
 		"price": {
