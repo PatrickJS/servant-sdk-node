@@ -1,6 +1,6 @@
 {
   "name": "servant-sdk-node",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Servant SDK for Node.js.  A simple javascript library for interacting with the Servant API",
   "main": "index.js",
   "scripts": {
