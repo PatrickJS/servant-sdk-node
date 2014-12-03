@@ -82,10 +82,10 @@ test('****** Test Note Archetype Schema', function(t) {
 });
 
 /**
- * Test Person Archetype
+ * Test Contact Archetype
  */
-test('****** Test Person Archetype Schema', function(t) {
-    validator.validateSchema(JATs.archetypes.person, function(err, report) {
+test('****** Test Contact Archetype Schema', function(t) {
+    validator.validateSchema(JATs.archetypes.contact, function(err, report) {
         console.log(err, report)
         t.equal(report.valid, true, 'Schema is valid per JSON Schema v4');
         t.end();

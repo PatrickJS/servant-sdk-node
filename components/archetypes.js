@@ -383,8 +383,9 @@ module.exports.validate = function(ServantDefaults, archetype, instance, callbac
     var keys1 = Object.keys(instance);
     var idx1 = keys1.length;
     while (idx1--) {
-
-        if (!archetype.properties[keys1[idx1]]) {
+        if (keys1[idx1] === 'servant') {
+            continue;
+        } else if (!archetype.properties[keys1[idx1]]) {
             // Check If Allowed Property
             errors[keys1[idx1]] = keys1[idx1] + ' is not allowed';
         } else if (archetype.properties[keys1[idx1]] && archetype.properties[keys1[idx1]].type && _utilities.whatIs(instance[keys1[idx1]]) !== archetype.properties[keys1[idx1]].type) {

@@ -1,5 +1,5 @@
 /**
- *  Servant SDK for Node.js v0.0.2 - https://github.com/servant-cmes/servant-sdk-node
+ *  Servant SDK for Node.js v0.0.5 - https://github.com/servant-cmes/servant-sdk-node
  *  Servant - https://www.servant.co
  *  Documentation – https://developers.servant.co/documentation
  *  By Austen Collins

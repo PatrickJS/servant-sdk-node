@@ -46,16 +46,16 @@ module.exports.run = function(callback) {
 		});
 	});
 
-	test('****** Test Validations – Person', function(t) {
-		var person = Servant.new('person');
+	test('****** Test Validations – Contact', function(t) {
+		var contact = Servant.new('contact');
 		// Test PROPERTY NOT ALLOWED & INVALID TYPES
-		person = {
+		contact = {
 			name: "Jack Smith",
 			phone_numbers: [{ phone_number: 801284127414, invalid_property: 'whoo!' }],
 			_id: 'yes!'
 		}
 		// Run Validation
-		Servant.validate('person', person, function(error, personvalidated) {
+		Servant.validate('contact', contact, function(error, contactvalidated) {
 			t.end();
 		});
 	});

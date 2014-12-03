@@ -19,9 +19,9 @@ module.exports.run = function(callback) {
 		t.end();
 	});
 
-	test('****** Test Person Instantiation', function(t) {
-		var person = Servant.new('person');
-		t.equal(person.full_name, "");
+	test('****** Test Contact Instantiation', function(t) {
+		var contact = Servant.new('contact');
+		t.equal(contact.full_name, "");
 		t.end();
 	});
 
